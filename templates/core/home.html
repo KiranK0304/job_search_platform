@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}WorkBee — Find Your Dream Job{% endblock %}
+
+{% block content %}
+
+<div class="dark-page">
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-bg">
+        <div class="hero-blob hero-blob--purple"></div>
+        <div class="hero-blob hero-blob--pink"></div>
+        <div class="hero-blob hero-blob--orange"></div>
+    </div>
+
+    <div class="hero-card">
+        <span class="hero-badge">✨ The #1 Job Platform</span>
+
+        <h1 class="hero-heading">
+            The Smartest Way to<br>
+            <span class="hero-heading--accent">Land Your Dream Job</span>
+        </h1>
+
+        <p class="hero-desc">
+            Connect with top employers instantly. Apply in one click.<br>
+            No clutter. No noise. Just opportunities.
+        </p>
+
+        <div class="hero-cta">
+            <a href="{% url 'job_list' %}" class="hero-btn hero-btn--primary">
+                <span>🔍</span> Explore Jobs
+            </a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="hero-btn hero-btn--secondary">
+                Get Started Free →
+            </a>
+            {% elif user.profile.role == "provider" %}
+            <a href="{% url 'job_create' %}" class="hero-btn hero-btn--secondary">
+                Post a Job →
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="hero-stats-row">
+            <div class="hero-stat-item">
+                <strong>500+</strong>
+                <span>Active Jobs</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat-item">
+                <strong>1,200+</strong>
+                <span>Job Seekers</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat-item">
+                <strong>300+</strong>
+                <span>Companies</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<div class="section-header section-header--dark">
+    <h2>How WorkBee Works</h2>
+    <p>Simple steps to land your next opportunity</p>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Create an Account</h3>
+        <p>
+            Sign up as a job seeker or an employer in seconds.
+            Build your profile and get started.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Browse & Search</h3>
+        <p>
+            Explore active job listings. Find the perfect role that
+            matches your skills and interests.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Apply & Get Hired</h3>
+        <p>
+            Submit your application with a cover letter.
+            Track your application status in real time.
+        </p>
+    </div>
+</div>
+
+<!-- Image Gallery Row -->
+<div class="section-header section-header--dark">
+    <h2>Where Great Teams Meet Talent</h2>
+    <p>Join a thriving community of professionals</p>
+</div>
+
+<div class="image-row">
+    <div class="image-card">
+        <img src="{% static 'images/headway-5QgIuuBxKwM-unsplash.jpg' %}" alt="Team meeting">
+        <div class="image-card-overlay">
+            <h4>Collaborative Teams</h4>
+            <p>Work with the best</p>
+        </div>
+    </div>
+
+    <div class="image-card">
+        <img src="{% static 'images/chang-duong-Sj0iMtq_Z4w-unsplash.jpg' %}" alt="Team collaboration">
+        <div class="image-card-overlay">
+            <h4>Great Culture</h4>
+            <p>Find your fit</p>
+        </div>
+    </div>
+
+    <div class="image-card">
+        <img src="{% static 'images/cherrydeck-rMILC1PIwM0-unsplash.jpg' %}" alt="Professional workspace">
+        <div class="image-card-overlay">
+            <h4>Modern Workspaces</h4>
+            <p>Thrive in your career</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Banner -->
+<div class="cta-banner">
+    <img src="{% static 'images/docusign-7RWBSYA9Rro-unsplash.jpg' %}" alt="Business" class="cta-banner-bg">
+    <div class="cta-banner-overlay"></div>
+
+    <div class="cta-banner-content">
+        <h2>Ready to Take the Next Step?</h2>
+
+        <p>
+            Join thousands of professionals who found their dream job through WorkBee.
+        </p>
+
+        <div class="hero-cta">
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="hero-btn hero-btn--primary">
+                Create Free Account
+            </a>
+            {% endif %}
+            <a href="{% url 'job_list' %}" class="hero-btn hero-btn--secondary">
+                View All Jobs →
+            </a>
+        </div>
+    </div>
+</div>
+
+</div><!-- end .dark-page -->
+{% endblock %}

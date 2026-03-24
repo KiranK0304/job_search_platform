@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Withdraw Application — WorkBee{% endblock %}
+
+{% block content %}
+<div class="page-header" style="text-align: center;">
+    <h1>Withdraw Application</h1>
+    <p>Are you sure you want to withdraw your application?</p>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="detail-section">
+        <h3>{{ application.job.title }}</h3>
+        <div class="card-meta mt-1">
+            <span>📍 {{ application.job.location|default:"Remote" }}</span>
+            <span>👤 {{ application.job.created_by.username }}</span>
+            <span>📅 Applied {{ application.applied_at|date:"M j, Y" }}</span>
+        </div>
+        {% if application.cover_letter %}
+            <p class="mt-1" style="font-size: 0.9rem; color: var(--grey-600);">{{ application.cover_letter|truncatewords:40 }}</p>
+        {% endif %}
+    </div>
+
+    <div class="alert alert-warning" style="margin-top: 1rem;">
+        ⚠️ This action cannot be undone. Your application and cover letter will be permanently removed.
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+        <form method="post" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="background-color: var(--red-600, #dc3545); border-color: var(--red-600, #dc3545);">Yes, Withdraw</button>
+        </form>
+        <a href="{% url 'my_applications' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>
+{% endblock %}

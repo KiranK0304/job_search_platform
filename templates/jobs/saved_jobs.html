@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load job_extras %}
+
+{% block title %}Saved Jobs — WorkBee{% endblock %}
+
+{% block content %}
+<div class="dark-page dark-page--inner">
+
+    <div class="dk-page-header">
+        <div>
+            <h1 class="dk-title">Saved Jobs</h1>
+            <p class="dk-subtitle">Jobs you've bookmarked for later</p>
+        </div>
+        <a href="{% url 'job_list' %}" class="dk-btn-ghost">← Browse All Jobs</a>
+    </div>
+
+    {% if saves %}
+        <div class="dk-cards-grid">
+        {% for save in saves %}
+            <div class="dk-card">
+                <div class="dk-card-top">
+                    <div class="dk-card-icon">🔖</div>
+                    <form method="post" action="{% url 'save_job' save.job.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'saved_jobs' %}">
+                        <button type="submit" class="dk-save-btn dk-save-btn--active" title="Unsave">★</button>
+                    </form>
+                </div>
+
+                <h3 class="dk-card-title"><a href="{% url 'job_detail' save.job.id %}">{{ save.job.title }}</a></h3>
+
+                <div class="dk-card-meta">
+                    <span>📍 {{ save.job.location|default:"Remote" }}</span>
+                    <span>👤 {{ save.job.created_by.username }}</span>
+                    <span>📅 Saved {{ save.saved_at|date:"M j, Y" }}</span>
+                </div>
+
+                <p class="dk-card-desc">{{ save.job.description|truncatewords:20 }}</p>
+
+                <div class="dk-card-actions">
+                    {% with app_id=applied_map|get_item:save.job.id %}
+                        {% if app_id %}
+                            <span class="dk-badge dk-badge--green">✓ Applied</span>
+                        {% else %}
+                            <form method="post" action="{% url 'apply_to_job' save.job.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'saved_jobs' %}">
+                                <button type="submit" class="dk-btn-sm">Apply Now</button>
+                            </form>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="dk-empty">
+            <div class="dk-empty-icon">🔖</div>
+            <p>No saved jobs yet. Browse listings and tap ☆ to save.</p>
+            <a href="{% url 'job_list' %}" class="dk-btn-sm">Browse Jobs</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

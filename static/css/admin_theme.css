@@ -1,0 +1,581 @@
+/* ==========================================================================
+   WORKBEE CUSTOM ADMIN THEME
+   A premium dark, glassmorphic aesthetic for the Django Admin
+   ========================================================================== */
+
+/* --- Base Theme Colors & Fonts --- */
+:root {
+    --primary: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --secondary: #ec4899;
+    --accent: #fbbf24;
+    
+    --bg-dark: #0c0a1a;
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --bg-card-hover: rgba(255, 255, 255, 0.06);
+    
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --text-light: rgba(255, 255, 255, 0.4);
+    
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-focus: rgba(139, 92, 246, 0.4);
+    
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Override default Django Admin variables */
+:root {
+    --primary: #8b5cf6;
+    --secondary: #0c0a1a;
+    --accent: #ec4899;
+    --primary-fg: #fff;
+    
+    --body-fg: #fff;
+    --body-bg: #0c0a1a;
+    --body-quiet-color: #a0a0a0;
+    --body-loud-color: #ffffff;
+    
+    --header-color: #ffffff;
+    --header-branding-color: #ffffff;
+    --header-bg: #110e24;
+    --header-link-color: rgba(255,255,255,0.7);
+    
+    --breadcrumbs-fg: #c4b5fd;
+    --breadcrumbs-link-fg: #8b5cf6;
+    --breadcrumbs-bg: transparent;
+    
+    --link-fg: #a78bfa;
+    --link-hover-color: #c4b5fd;
+    --link-selected-fg: #ffffff;
+    
+    --hairline-color: rgba(255,255,255,0.1);
+    --border-color: rgba(255,255,255,0.1);
+    
+    --error-fg: #f87171;
+    --message-success-bg: rgba(34, 197, 94, 0.15);
+    --message-warning-bg: rgba(251, 191, 36, 0.15);
+    --message-error-bg: rgba(239, 68, 68, 0.15);
+    
+    --darkened-bg: rgba(255,255,255,0.03);
+    --selected-bg: rgba(139, 92, 246, 0.15);
+    --selected-row: rgba(139, 92, 246, 0.1);
+    
+    --object-tools-bg: rgba(139, 92, 246, 0.15);
+    --object-tools-fg: #c4b5fd;
+    --object-tools-hover-bg: rgba(139, 92, 246, 0.25);
+}
+
+/* --- Global Elements --- */
+a:link, a:visited {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover {
+    color: var(--primary-hover);
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+#content {
+    background: transparent;
+    padding: 30px;
+}
+
+/* --- Header --- */
+#header {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+#branding h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+#branding h1 a {
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#user-tools {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+#user-tools a {
+    color: var(--accent);
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(236, 72, 153, 0.1);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    margin-left: 8px;
+    transition: all 0.2s;
+}
+
+#user-tools a:hover {
+    background: rgba(236, 72, 153, 0.2);
+    color: #fff;
+}
+
+/* --- Breadcrumbs --- */
+.breadcrumbs {
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 30px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.breadcrumbs a {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* --- Dashboard / App Index --- */
+.dashboard .module {
+    margin-bottom: 30px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.dashboard .module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard .module caption {
+    background: rgba(255,255,255,0.03);
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: left;
+    color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    letter-spacing: 0.5px;
+}
+
+.dashboard .module caption a {
+    color: #fff;
+    background: linear-gradient(90deg, #fff, rgba(255,255,255,0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard .module th,
+.dashboard .module td {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.dashboard .module tr:hover {
+    background: var(--bg-card-hover);
+}
+
+.dashboard .module th a {
+    font-weight: 600;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+}
+
+.dashboard .module td a.addlink,
+.dashboard .module td a.changelink {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dashboard .module td a.addlink::before,
+.dashboard .module td a.changelink::before {
+    display: none; /* Hide default django icons */
+}
+
+.dashboard .module td a.addlink:hover {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+}
+
+.dashboard .module td a.changelink:hover {
+    background: rgba(139, 92, 246, 0.15);
+    color: #c4b5fd;
+}
+
+/* --- Change List (Tables) --- */
+#changelist {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    display: flex;
+    overflow: hidden;
+}
+
+#toolbar {
+    background: rgba(255,255,255,0.02);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+}
+
+#toolbar form {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+#toolbar input[type="text"] {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    width: 300px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+#toolbar input[type="text"]:focus {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    outline: none;
+}
+
+#toolbar input[type="submit"] {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#toolbar input[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+.change-list .filtered .results, .change-list .filtered .paginator, .filtered #toolbar, .filtered div.xfull {
+    margin-right: 280px; /* Sidebar width adjustment */
+}
+
+#changelist-filter {
+    background: rgba(0,0,0,0.2);
+    border-left: 1px solid var(--border-color);
+    width: 280px;
+}
+
+#changelist-filter h2 {
+    background: transparent;
+    padding: 15px 20px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    color: #fff;
+}
+
+#changelist-filter h3 {
+    padding: 12px 20px 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+#changelist-filter ul {
+    padding: 0 20px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#changelist-filter li {
+    margin: 4px 0;
+}
+
+#changelist-filter a {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    display: block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+#changelist-filter a:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+#changelist-filter li.selected a {
+    color: #c4b5fd;
+    background: rgba(139, 92, 246, 0.15);
+    font-weight: 600;
+}
+
+/* Data Table */
+table {
+    width: 100%;
+}
+
+thead th {
+    background: rgba(255,255,255,0.03);
+    padding: 12px 15px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead th a {
+    color: var(--text-muted);
+}
+
+tbody td, tbody th {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+tbody tr:hover, tbody tr.selected {
+    background: var(--bg-card-hover);
+}
+
+tbody th a {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Action Checkboxes */
+.action-checkbox {
+    width: 40px;
+    text-align: center;
+}
+
+/* Actions Dropdown */
+.actions {
+    background: rgba(255,255,255,0.02);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    outline: none;
+}
+
+.actions select option {
+    background: #1a1830;
+    color: #fff;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.button:hover, input[type=submit]:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: var(--primary);
+    border-color: var(--primary-hover);
+}
+
+.button.default:hover, input[type=submit].default:hover {
+    background: var(--primary-hover);
+}
+
+/* Paginator */
+.paginator {
+    background: rgba(255,255,255,0.02);
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.paginator a {
+    background: rgba(255,255,255,0.05);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.paginator a:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.paginator span.this-page {
+    background: var(--primary);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* --- Forms (Add/Change Page) --- */
+form .aligned p.help {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding-left: 0;
+    margin-top: 4px;
+}
+
+fieldset.module {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+    padding: 0;
+    overflow: hidden;
+}
+
+fieldset.module h2 {
+    background: rgba(255,255,255,0.03);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.form-row {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.form-row:last-child {
+    border-bottom: none;
+}
+
+.form-row > div {
+    width: 100%;
+}
+
+.form-row label {
+    font-weight: 600;
+    color: #e2e8f0;
+    width: 160px;
+    display: inline-block;
+    padding-right: 15px;
+    float: left;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"],
+.form-row input[type="email"],
+.form-row input[type="url"],
+.form-row input[type="number"],
+.form-row select,
+.form-row textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    width: calc(100% - 180px);
+    max-width: 600px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-row textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    outline: none;
+}
+
+/* Submit Row */
+.submit-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.submit-row p {
+    margin: 0;
+}
+
+.submit-row a.deletelink {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.submit-row a.deletelink:hover {
+    background: rgba(239, 68, 68, 0.2);
+}

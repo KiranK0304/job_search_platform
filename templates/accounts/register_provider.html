@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register as Job Provider — WorkBee{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-image">
+        <img src="{% static 'images/annie-spratt-vGgn0xLdy8s-unsplash.jpg' %}" alt="Workspace">
+        <div class="auth-image-overlay">
+            <div class="auth-image-text">
+                <h2>🏢 Job Provider</h2>
+                <p>Create your account to post job listings, review applicants, and build your team.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-side">
+        <div class="auth-form-container">
+            <h1>Create Provider Account</h1>
+            <p class="subtitle">Start hiring top talent today</p>
+
+            {% if error %}
+                <div class="alert alert-error">⚠️ {{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'register_provider' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@company.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+
+            <p class="auth-footer-text">
+                Looking for a job? <a href="{% url 'register_seeker' %}">Register as Seeker</a>
+            </p>
+            <p class="auth-footer-text">
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

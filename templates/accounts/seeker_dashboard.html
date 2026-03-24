@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Seeker Dashboard — WorkBee{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Welcome back, {{ user.username }}! 👋</h1>
+    <p>Your job seeker dashboard</p>
+</div>
+
+<!-- Stats Row -->
+<div class="features-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 36px;">
+    <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>{{ total }}</h3>
+        <p>Total Applications</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">⏳</div>
+        <h3>{{ pending }}</h3>
+        <p>Pending</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>{{ accepted }}</h3>
+        <p>Accepted</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="section-header" style="text-align: left;">
+    <h2>Quick Actions</h2>
+</div>
+
+<div class="btn-group mb-3">
+    <a href="{% url 'job_list' %}" class="btn btn-primary">🔍 Browse Jobs</a>
+    <a href="{% url 'my_applications' %}" class="btn btn-secondary">📋 My Applications</a>
+    <a href="{% url 'profile' %}" class="btn btn-secondary">👤 My Profile</a>
+</div>
+
+<!-- Recent Applications -->
+<div class="section-header" style="text-align: left;">
+    <h2>Recent Applications</h2>
+</div>
+
+{% if applications %}
+    {% for app in applications %}
+        <div class="job-card">
+            <div class="job-card-icon">📄</div>
+            <div class="job-card-body">
+                <div class="flex-between">
+                    <div>
+                        <h2><a href="{% url 'job_detail' app.job.id %}">{{ app.job.title }}</a></h2>
+                        <div class="card-meta">
+                            <span>📍 {{ app.job.location|default:"Remote" }}</span>
+                            <span>📅 {{ app.applied_at|date:"M j, Y" }}</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <p>No applications yet. Start by browsing jobs!</p>
+        <a href="{% url 'job_list' %}" class="btn btn-primary">Browse Jobs</a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register — WorkBee{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <!-- Left side: Image -->
+    <div class="auth-image">
+        <img src="{% static 'images/annie-spratt-vGgn0xLdy8s-unsplash.jpg' %}" alt="Teamwork">
+        <div class="auth-image-overlay">
+            <div class="auth-image-text">
+                <h2>Join WorkBee</h2>
+                <p>Create your account and start connecting with amazing job opportunities or find the perfect candidate.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right side: Form -->
+    <div class="auth-form-side">
+        <div class="auth-form-container">
+            <h1>Create Account</h1>
+            <p class="subtitle">Join as a job seeker or employer</p>
+
+            {% if error %}
+                <div class="alert alert-error">⚠️ {{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" name="role" required>
+                        <option value="seeker">Job Seeker</option>
+                        <option value="provider">Job Provider / Employer</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+
+            <p class="auth-footer-text">
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register as Job Seeker — WorkBee{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-image">
+        <img src="{% static 'images/chang-duong-Sj0iMtq_Z4w-unsplash.jpg' %}" alt="Team collaboration">
+        <div class="auth-image-overlay">
+            <div class="auth-image-text">
+                <h2>🔍 Job Seeker</h2>
+                <p>Create your account to browse jobs, apply to positions, and track your application status.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-form-side">
+        <div class="auth-form-container">
+            <h1>Create Seeker Account</h1>
+            <p class="subtitle">Find your dream job today</p>
+
+            {% if error %}
+                <div class="alert alert-error">⚠️ {{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'register_seeker' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+
+            <p class="auth-footer-text">
+                Want to post jobs instead? <a href="{% url 'register_provider' %}">Register as Provider</a>
+            </p>
+            <p class="auth-footer-text">
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

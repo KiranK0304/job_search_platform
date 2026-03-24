@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact — WorkBee{% endblock %}
+
+{% block content %}
+<div class="page-header text-center">
+    <h1>Get in Touch</h1>
+    <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
+</div>
+
+<div class="contact-wrapper">
+    <!-- Contact Info Card with Image -->
+    <div class="contact-info-card animate-in animate-in-delay-1">
+        <div class="contact-image-banner">
+            <img src="{% static 'images/docusign-7RWBSYA9Rro-unsplash.jpg' %}" alt="Contact us">
+        </div>
+        <div class="contact-details">
+            <div class="contact-item">
+                <div class="contact-item-icon">📧</div>
+                <div>
+                    <h4>Email Us</h4>
+                    <p>support@workbee.com</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-item-icon">📞</div>
+                <div>
+                    <h4>Call Us</h4>
+                    <p>+91 98765 43210</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-item-icon">📍</div>
+                <div>
+                    <h4>Visit Us</h4>
+                    <p>123 Tech Park, Bangalore, India</p>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-item-icon">🕐</div>
+                <div>
+                    <h4>Business Hours</h4>
+                    <p>Mon — Fri, 9:00 AM to 6:00 PM IST</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="form-card animate-in animate-in-delay-2">
+        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--grey-900); margin-bottom: 20px;">Send a Message</h3>
+        <form method="post" action="{% url 'contact' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell us how we can help..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

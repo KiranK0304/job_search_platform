@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Job — WorkBee{% endblock %}
+
+{% block content %}
+<div class="page-header" style="text-align: center;">
+    <h1>Delete Job Listing</h1>
+    <p>Are you sure you want to delete this job?</p>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="detail-section">
+        <h3>{{ job.title }}</h3>
+        <div class="card-meta mt-1">
+            <span>📍 {{ job.location|default:"Remote" }}</span>
+            <span>📅 Posted {{ job.created_at|date:"M j, Y" }}</span>
+            <span>👥 {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}</span>
+        </div>
+        <p class="mt-1">{{ job.description|truncatewords:40 }}</p>
+    </div>
+
+    <div class="alert alert-warning" style="margin-top: 1rem;">
+        ⚠️ This action cannot be undone. The job listing and all associated applications will be permanently deleted.
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 1.5rem;">
+        <form method="post" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="background-color: var(--red-600, #dc3545); border-color: var(--red-600, #dc3545);">Yes, Delete</button>
+        </form>
+        <a href="{% url 'my_jobs' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>
+{% endblock %}

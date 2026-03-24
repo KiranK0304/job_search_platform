@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About — WorkBee{% endblock %}
+
+{% block content %}
+<!-- About Hero Banner -->
+<div class="about-hero animate-in">
+    <img src="{% static 'images/chang-duong-Sj0iMtq_Z4w-unsplash.jpg' %}" alt="Our team">
+    <div class="about-hero-overlay"></div>
+    <div class="about-hero-content">
+        <h1>About WorkBee</h1>
+        <p>Connecting talented individuals with amazing opportunities since 2024.</p>
+    </div>
+</div>
+
+<!-- Mission Cards -->
+<div class="section-header">
+    <h2>What Drives Us</h2>
+    <p>Our mission is to make job searching and hiring simple, fast, and human.</p>
+</div>
+
+<div class="about-grid">
+    <div class="about-card animate-in animate-in-delay-1">
+        <div class="about-card-icon">🎯</div>
+        <h3>Our Mission</h3>
+        <p>To bridge the gap between talented job seekers and forward-thinking employers. We believe everyone deserves a fulfilling career.</p>
+    </div>
+    <div class="about-card animate-in animate-in-delay-2">
+        <div class="about-card-icon">👁️</div>
+        <h3>Our Vision</h3>
+        <p>A world where finding the right job — or the right candidate — is effortless, transparent, and accessible to all.</p>
+    </div>
+    <div class="about-card animate-in animate-in-delay-1">
+        <div class="about-card-icon">🤝</div>
+        <h3>For Job Seekers</h3>
+        <p>Browse curated job listings, apply instantly with a cover letter, and track all your applications in one dashboard.</p>
+    </div>
+    <div class="about-card animate-in animate-in-delay-2">
+        <div class="about-card-icon">🏢</div>
+        <h3>For Employers</h3>
+        <p>Post job openings, review applicants, and find the perfect match for your team — all through a clean, simple interface.</p>
+    </div>
+</div>
+
+<!-- Image Section -->
+<div class="about-image-section">
+    <div class="about-img-wrapper animate-in animate-in-delay-1">
+        <img src="{% static 'images/headway-5QgIuuBxKwM-unsplash.jpg' %}" alt="Team meeting">
+    </div>
+    <div class="about-img-wrapper animate-in animate-in-delay-2">
+        <img src="{% static 'images/cherrydeck-rMILC1PIwM0-unsplash.jpg' %}" alt="Modern workspace">
+    </div>
+</div>
+
+<!-- Tech Stack Card -->
+<div class="card animate-in" style="text-align: center; padding: 40px;">
+    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--grey-900); margin-bottom: 8px;">Built with ❤️ using Django</h3>
+    <p style="color: var(--grey-500);">This project is a Django web application built as a college assignment. It demonstrates models, views, templates, authentication, and static file management.</p>
+</div>
+{% endblock %}

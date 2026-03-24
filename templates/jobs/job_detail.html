@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} — Job App{% endblock %}
+
+{% block content %}
+<!-- Job detail card -->
+<div class="card">
+    <div class="detail-header flex-between">
+        <div>
+            <h1>{{ job.title }}</h1>
+            <div class="card-meta mt-1">
+                <span>📍 {{ job.location|default:"Remote" }}</span>
+                <span>👤 {{ job.created_by.username }}</span>
+                <span>📅 {{ job.created_at|date:"M j, Y" }}</span>
+                {% if job.is_active %}
+                    <span class="badge badge-active">Active</span>
+                {% else %}
+                    <span class="badge badge-inactive">Closed</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Job description -->
+    <div class="detail-section">
+        <h3>Description</h3>
+        <p>{{ job.description|linebreaksbr }}</p>
+    </div>
+</div>
+
+<!-- Action buttons -->
+<div class="mt-2">
+    {% if user.is_authenticated %}
+        {% if user.profile.role == "seeker" %}
+            {% if has_applied %}
+                <span class="btn btn-secondary">✓ Already Applied</span>
+                <form method="post" action="{% url 'withdraw_application' application_id %}" style="display: inline; margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'job_detail' job.id %}">
+                    <button type="submit" class="btn btn-secondary" style="color: var(--red-600);" onclick="return confirm('Withdraw your application?')">✕ Withdraw</button>
+                </form>
+            {% else %}
+                <a href="{% url 'apply_to_job' job.id %}" class="btn btn-primary">Apply Now</a>
+            {% endif %}
+        {% endif %}
+
+        {% if user == job.created_by %}
+            <a href="{% url 'job_applications' job.id %}" class="btn btn-secondary">View Applicants</a>
+            <form method="post" action="{% url 'job_delete' job.id %}" style="display: inline; margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary" style="color: var(--red-600);" onclick="return confirm('Delete this job listing permanently?')">🗑 Delete</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
+    {% endif %}
+
+    <a href="{% url 'job_list' %}" class="btn btn-secondary">← Back to Jobs</a>
+</div>
+{% endblock %}

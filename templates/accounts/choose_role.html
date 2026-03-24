@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Register — Choose Account Type{% endblock %}
+
+{% block content %}
+<div class="page-header text-center">
+    <h1>Join WorkBee</h1>
+    <p>Choose your account type to get started</p>
+</div>
+
+<div class="features-grid" style="grid-template-columns: 1fr 1fr; max-width: 700px; margin: 0 auto;">
+    <!-- Seeker Card -->
+    <a href="{% url 'register_seeker' %}" class="feature-card" style="text-decoration: none; cursor: pointer;">
+        <div class="feature-icon">🔍</div>
+        <h3>Job Seeker</h3>
+        <p>Browse job listings, apply to positions, and track your applications.</p>
+        <div class="mt-2">
+            <span class="btn btn-primary btn-sm">Register as Seeker</span>
+        </div>
+    </a>
+
+    <!-- Provider Card -->
+    <a href="{% url 'register_provider' %}" class="feature-card" style="text-decoration: none; cursor: pointer;">
+        <div class="feature-icon">🏢</div>
+        <h3>Job Provider</h3>
+        <p>Post job openings, review applicants, and manage your listings.</p>
+        <div class="mt-2">
+            <span class="btn btn-primary btn-sm">Register as Provider</span>
+        </div>
+    </a>
+</div>
+
+<p class="text-center mt-3" style="color: var(--grey-500);">
+    Already have an account? <a href="{% url 'login' %}">Sign in</a>
+</p>
+{% endblock %}

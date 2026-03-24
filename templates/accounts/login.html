@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login — WorkBee{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <!-- Left side: Image -->
+    <div class="auth-image">
+        <img src="{% static 'images/cherrydeck-rMILC1PIwM0-unsplash.jpg' %}" alt="Professional workspace">
+        <div class="auth-image-overlay">
+            <div class="auth-image-text">
+                <h2>Welcome Back!</h2>
+                <p>Log in to access your dashboard, track applications, and discover new opportunities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right side: Form -->
+    <div class="auth-form-side">
+        <div class="auth-form-container">
+            <h1>Sign In</h1>
+            <p class="subtitle">Enter your credentials to continue</p>
+
+            {% if error %}
+                <div class="alert alert-error">⚠️ {{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <p class="auth-footer-text">
+                Don't have an account? <a href="{% url 'register' %}">Create one</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

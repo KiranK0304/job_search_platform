@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}WorkBee — Find Your Dream Job{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container">
+            <a href="{% url 'home' %}" class="navbar-brand">
+                <span class="brand-icon">🐝</span> WorkBee
+            </a>
+
+            <nav>
+                <ul class="navbar-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'job_list' %}">Jobs</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+
+                    {% if user.is_authenticated %}
+                    {% if user.profile.role == "seeker" %}
+                    <li><a href="{% url 'saved_jobs' %}">Saved</a></li>
+                    <li><a href="{% url 'my_applications' %}">Applied</a></li>
+                    <li><a href="{% url 'seeker_dashboard' %}">Dashboard</a></li>
+                    {% elif user.profile.role == "provider" %}
+                    <li><a href="{% url 'my_jobs' %}">My Jobs</a></li>
+                    <li><a href="{% url 'job_create' %}">Create Job</a></li>
+                    <li><a href="{% url 'provider_dashboard' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'logout' %}" style="font-weight: 700; color: var(--red-600);">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="btn-nav">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main">
+        <div class="container">
+            {% if messages %}
+            <div style="margin-bottom: 24px;">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand-col">
+                    <a href="{% url 'home' %}" class="footer-logo">
+                        <span class="brand-icon">🐝</span> WorkBee
+                    </a>
+                    <p class="footer-tagline">The modern way to find your dream job. Built for professionals who value quality.</p>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="{% url 'job_list' %}">Browse Jobs</a></li>
+                        {% if user.is_authenticated and user.profile.role == "seeker" %}
+                        <li><a href="{% url 'saved_jobs' %}">Saved Jobs</a></li>
+                        <li><a href="{% url 'my_applications' %}">My Applications</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="footer-links-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; 2026 WorkBee. All rights reserved.</span>
+                <span>Built with Django</span>
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

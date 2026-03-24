@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Applications — WorkBee{% endblock %}
+
+{% block content %}
+<div class="dark-page dark-page--inner">
+
+    <div class="dk-page-header">
+        <div>
+            <h1 class="dk-title">My Applications</h1>
+            <p class="dk-subtitle">Track the jobs you've applied to</p>
+        </div>
+        <a href="{% url 'job_list' %}" class="dk-btn-ghost">← Browse Jobs</a>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <div class="dk-tabs">
+        <a href="{% url 'my_applications' %}" class="dk-tab {% if status_filter == 'all' %}dk-tab--active{% endif %}">
+            All <span class="dk-tab-count">{{ counts.all }}</span>
+        </a>
+        <a href="{% url 'my_applications' %}?status=pending" class="dk-tab {% if status_filter == 'pending' %}dk-tab--active{% endif %}">
+            ⏳ Pending <span class="dk-tab-count">{{ counts.pending }}</span>
+        </a>
+        <a href="{% url 'my_applications' %}?status=accepted" class="dk-tab {% if status_filter == 'accepted' %}dk-tab--active dk-tab--green{% endif %}">
+            ✅ Accepted <span class="dk-tab-count">{{ counts.accepted }}</span>
+        </a>
+        <a href="{% url 'my_applications' %}?status=rejected" class="dk-tab {% if status_filter == 'rejected' %}dk-tab--active dk-tab--red{% endif %}">
+            ❌ Rejected <span class="dk-tab-count">{{ counts.rejected }}</span>
+        </a>
+    </div>
+
+    {% if applications %}
+        <div class="dk-app-list">
+        {% for app in applications %}
+            <div class="dk-app-card">
+                <div class="dk-app-card-left">
+                    <div class="dk-app-status-dot dk-dot--{{ app.status }}"></div>
+                    <div>
+                        <h3 class="dk-app-title"><a href="{% url 'job_detail' app.job.id %}">{{ app.job.title }}</a></h3>
+                        <div class="dk-card-meta">
+                            <span>📍 {{ app.job.location|default:"Remote" }}</span>
+                            <span>👤 {{ app.job.created_by.username }}</span>
+                            <span>📅 Applied {{ app.applied_at|date:"M j, Y" }}</span>
+                        </div>
+                        {% if app.cover_letter %}
+                        <p class="dk-card-desc" style="margin-top: 8px;">{{ app.cover_letter|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="dk-app-card-right">
+                    {% if app.status == "pending" %}
+                        <span class="dk-badge dk-badge--yellow">⏳ Pending</span>
+                        <form method="post" action="{% url 'withdraw_application' app.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'my_applications' %}{% if status_filter != 'all' %}?status={{ status_filter }}{% endif %}">
+                            <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Withdraw this application?')">✕ Withdraw</button>
+                        </form>
+                    {% elif app.status == "accepted" %}
+                        <span class="dk-badge dk-badge--green">✅ Accepted</span>
+                    {% elif app.status == "rejected" %}
+                        <span class="dk-badge dk-badge--red">❌ Rejected</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="dk-empty">
+            <div class="dk-empty-icon">📋</div>
+            {% if status_filter != 'all' %}
+                <p>No {{ status_filter }} applications.</p>
+                <a href="{% url 'my_applications' %}" class="dk-btn-sm">View All</a>
+            {% else %}
+                <p>You haven't applied to any jobs yet.</p>
+                <a href="{% url 'job_list' %}" class="dk-btn-sm">Browse Jobs</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

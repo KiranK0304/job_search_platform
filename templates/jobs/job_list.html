@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% load job_extras %}
+
+{% block title %}Jobs — WorkBee{% endblock %}
+
+{% block content %}
+<div class="dark-page dark-page--inner">
+
+    <!-- Page header + search -->
+    <div class="dk-page-header">
+        <div>
+            <h1 class="dk-title">Job Listings</h1>
+            <p class="dk-subtitle">Browse all active positions</p>
+        </div>
+        <div class="dk-header-actions">
+            <form method="get" action="{% url 'job_list' %}" class="dk-search-form">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search jobs..." class="dk-search-input" />
+                <!-- preserve sort -->
+                {% if request.GET.sort %}
+                <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                {% endif %}
+                <button type="submit" class="dk-search-btn">🔍</button>
+            </form>
+            <form method="get" action="{% url 'job_list' %}" class="dk-sort-form">
+                {% if search_query %}
+                <input type="hidden" name="q" value="{{ search_query }}">
+                {% endif %}
+                <select name="sort" onchange="this.form.submit()" class="dk-select">
+                    <option value="-created_at" {% if request.GET.sort == '-created_at' or not request.GET.sort %}selected{% endif %}>Newest</option>
+                    <option value="title" {% if request.GET.sort == 'title' %}selected{% endif %}>Title A-Z</option>
+                    <option value="location" {% if request.GET.sort == 'location' %}selected{% endif %}>Location</option>
+                </select>
+            </form>
+            {% if user.is_authenticated and user.profile.role == "provider" %}
+                <a href="{% url 'job_create' %}" class="hero-btn hero-btn--primary" style="padding: 10px 20px; font-size: 0.85rem;">+ Post Job</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if search_query %}
+    <p class="dk-search-info">Showing results for "<strong>{{ search_query }}</strong>" — <a href="{% url 'job_list' %}" style="color: #c4b5fd;">Clear</a></p>
+    {% endif %}
+
+    <!-- Job cards -->
+    {% if jobs %}
+        <div class="dk-cards-grid">
+        {% for job in jobs %}
+            <div class="dk-card">
+                <div class="dk-card-top">
+                    <div class="dk-card-icon">💼</div>
+                    {% if user.is_authenticated and user.profile.role == "seeker" %}
+                    <form method="post" action="{% url 'save_job' job.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'job_list' %}{% if request.GET.sort %}?sort={{ request.GET.sort }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">
+                        <button type="submit" class="dk-save-btn {% if job.id in saved_set %}dk-save-btn--active{% endif %}" title="{% if job.id in saved_set %}Unsave{% else %}Save{% endif %}">
+                            {% if job.id in saved_set %}★{% else %}☆{% endif %}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <h3 class="dk-card-title"><a href="{% url 'job_detail' job.id %}">{{ job.title }}</a></h3>
+
+                <div class="dk-card-meta">
+                    <span>📍 {{ job.location|default:"Remote" }}</span>
+                    <span>👤 {{ job.created_by.username }}</span>
+                    <span>📅 {{ job.created_at|date:"M j, Y" }}</span>
+                </div>
+
+                <p class="dk-card-desc">{{ job.description|truncatewords:20 }}</p>
+
+                <div class="dk-card-actions">
+                    {% if user.is_authenticated %}
+                        {% if user.profile.role == "seeker" %}
+                            {% with app_id=applied_map|get_item:job.id %}
+                                {% if app_id %}
+                                    <span class="dk-badge dk-badge--green">✓ Applied</span>
+                                    <form method="post" action="{% url 'withdraw_application' app_id %}" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{% url 'job_list' %}">
+                                        <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Withdraw?')">✕ Withdraw</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{% url 'apply_to_job' job.id %}" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{% url 'job_list' %}">
+                                        <button type="submit" class="dk-btn-sm">Apply Now</button>
+                                    </form>
+                                {% endif %}
+                            {% endwith %}
+                        {% elif user.profile.role == "provider" and user == job.created_by %}
+                            <a href="{% url 'job_applications' job.id %}" class="dk-btn-ghost">👥 Applicants</a>
+                            <form method="post" action="{% url 'job_delete' job.id %}" style="margin:0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'job_list' %}">
+                                <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Delete this job?')">🗑 Delete</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="dk-btn-sm">Login to Apply</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="dk-empty">
+            <div class="dk-empty-icon">🔍</div>
+            <p>{% if search_query %}No jobs found matching "{{ search_query }}"{% else %}No jobs posted yet.{% endif %}</p>
+            {% if user.is_authenticated and user.profile.role == "provider" %}
+                <a href="{% url 'job_create' %}" class="dk-btn-sm">Post the First Job</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

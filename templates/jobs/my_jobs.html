@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Jobs — WorkBee{% endblock %}
+
+{% block content %}
+<div class="flex-between page-header">
+    <div>
+        <h1>My Job Listings</h1>
+        <p>Manage the jobs you've posted</p>
+    </div>
+    <a href="{% url 'job_create' %}" class="btn btn-primary">+ Post a New Job</a>
+</div>
+
+{% if jobs %}
+    {% for job in jobs %}
+        <div class="job-card animate-in">
+            <div class="job-card-icon">💼</div>
+            <div class="job-card-body">
+                <div class="flex-between">
+                    <div style="flex: 1; min-width: 0;">
+                        <h2><a href="{% url 'job_detail' job.id %}">{{ job.title }}</a></h2>
+                        <div class="card-meta">
+                            <span>📍 {{ job.location|default:"Remote" }}</span>
+                            <span>📅 Posted {{ job.created_at|date:"M j, Y" }}</span>
+                            <span>👥 {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                        {% if job.is_active %}
+                            <span class="badge badge-active">Active</span>
+                        {% else %}
+                            <span class="badge badge-inactive">Closed</span>
+                        {% endif %}
+                        <a href="{% url 'job_applications' job.id %}" class="btn btn-sm btn-secondary">👥 Applicants</a>
+                        <form method="post" action="{% url 'job_delete' job.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'my_jobs' %}">
+                            <button type="submit" class="btn btn-sm btn-secondary" style="color: var(--red-600);" onclick="return confirm('Delete this job listing permanently?')">🗑 Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <p class="mt-1">{{ job.description|truncatewords:25 }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <p>You haven't posted any jobs yet.</p>
+        <a href="{% url 'job_create' %}" class="btn btn-primary">Post Your First Job</a>
+    </div>
+{% endif %}
+{% endblock %}
