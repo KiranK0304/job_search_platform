@@ -32,3 +32,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def auto_create_profile(sender, instance, created, **kwargs):
+    """Automatically create a Profile for any new User, defaulting to seeker if not specified."""
+    if created:
+        Profile.objects.get_or_create(user=instance, defaults={"role": Profile.Role.SEEKER})

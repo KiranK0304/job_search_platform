@@ -1032,6 +1032,7 @@ img {
     border-radius: 16px;
     padding: 24px;
     transition: all 0.25s ease;
+    position: relative; /* For the link overlay */
 }
 
 .dk-card:hover {
@@ -1041,11 +1042,20 @@ img {
     transform: translateY(-2px);
 }
 
+.dk-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 16px;
+}
+
 .dk-card-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    position: relative;
+    z-index: 2; /* Keep above card link */
 }
 
 .dk-card-icon {
@@ -1056,6 +1066,8 @@ img {
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
 }
 
 .dk-card-title a {
@@ -1088,6 +1100,8 @@ img {
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
 }
 
 /* ====== Dark Buttons ====== */

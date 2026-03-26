@@ -8,6 +8,10 @@ from .models import Job, SavedJob
 
 def job_list(request):
     """Show all active job listings with search and sort."""
+    # Prevent providers from accessing the global job board
+    if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.role == "provider":
+        return redirect("provider_dashboard")
+
     jobs = Job.objects.filter(is_active=True)
 
     # Search

@@ -1,60 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}{{ job.title }} — Job App{% endblock %}
+{% block title %}{{ job.title }} — WorkBee{% endblock %}
 
 {% block content %}
-<!-- Job detail card -->
-<div class="card">
-    <div class="detail-header flex-between">
+<div class="dark-page dark-page--inner">
+    <div class="dk-page-header">
         <div>
-            <h1>{{ job.title }}</h1>
-            <div class="card-meta mt-1">
+            <h1 class="dk-title">{{ job.title }}</h1>
+            <p class="dk-subtitle" style="display: flex; gap: 16px; align-items: center; margin-top: 12px;">
                 <span>📍 {{ job.location|default:"Remote" }}</span>
                 <span>👤 {{ job.created_by.username }}</span>
                 <span>📅 {{ job.created_at|date:"M j, Y" }}</span>
                 {% if job.is_active %}
-                    <span class="badge badge-active">Active</span>
+                    <span class="dk-badge dk-badge--green">Active</span>
                 {% else %}
-                    <span class="badge badge-inactive">Closed</span>
+                    <span class="dk-badge dk-badge--red">Closed</span>
                 {% endif %}
-            </div>
+            </p>
+        </div>
+        <div class="dk-header-actions">
+            <a href="{% url 'job_list' %}" class="dk-btn-ghost">← Back to Jobs</a>
         </div>
     </div>
 
-    <!-- Job description -->
-    <div class="detail-section">
-        <h3>Description</h3>
-        <p>{{ job.description|linebreaksbr }}</p>
+    <!-- Job Details Content -->
+    <div class="dk-card" style="margin-bottom: 32px; font-size: 1.05rem; color: rgba(255, 255, 255, 0.8);">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 20px;">Job Description</h3>
+        <p style="line-height: 1.8;">{{ job.description|linebreaksbr }}</p>
     </div>
-</div>
 
-<!-- Action buttons -->
-<div class="mt-2">
-    {% if user.is_authenticated %}
-        {% if user.profile.role == "seeker" %}
-            {% if has_applied %}
-                <span class="btn btn-secondary">✓ Already Applied</span>
-                <form method="post" action="{% url 'withdraw_application' application_id %}" style="display: inline; margin: 0;">
+    <!-- Actions -->
+    <div class="dk-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0;">Interested in this role?</h3>
+            {% if user.is_authenticated and user.profile.role == "seeker" %}
+                <!-- Save Button -->
+                <form method="post" action="{% url 'save_job' job.id %}" style="margin: 0;">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{% url 'job_detail' job.id %}">
-                    <button type="submit" class="btn btn-secondary" style="color: var(--red-600);" onclick="return confirm('Withdraw your application?')">✕ Withdraw</button>
+                    <button type="submit" class="dk-save-btn {% if is_saved %}dk-save-btn--active{% endif %}" title="{% if is_saved %}Unsave{% else %}Save{% endif %} Job">
+                        {% if is_saved %}★{% else %}☆{% endif %}
+                    </button>
                 </form>
-            {% else %}
-                <a href="{% url 'apply_to_job' job.id %}" class="btn btn-primary">Apply Now</a>
             {% endif %}
-        {% endif %}
+        </div>
 
-        {% if user == job.created_by %}
-            <a href="{% url 'job_applications' job.id %}" class="btn btn-secondary">View Applicants</a>
-            <form method="post" action="{% url 'job_delete' job.id %}" style="display: inline; margin: 0;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary" style="color: var(--red-600);" onclick="return confirm('Delete this job listing permanently?')">🗑 Delete</button>
-            </form>
-        {% endif %}
-    {% else %}
-        <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
-    {% endif %}
-
-    <a href="{% url 'job_list' %}" class="btn btn-secondary">← Back to Jobs</a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            {% if user.is_authenticated %}
+                {% if user.profile.role == "seeker" %}
+                    {% if has_applied %}
+                        <span class="dk-badge dk-badge--green" style="padding: 10px 18px; font-size: 0.9rem;">✓ Already Applied</span>
+                        <form method="post" action="{% url 'withdraw_application' application_id %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'job_detail' job.id %}">
+                            <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Withdraw your application?')">✕ Withdraw Application</button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'apply_to_job' job.id %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'job_detail' job.id %}">
+                            <button type="submit" class="dk-btn-sm" style="padding: 12px 24px; font-size: 1rem;">Apply Now</button>
+                        </form>
+                    {% endif %}
+                {% elif user == job.created_by %}
+                    <a href="{% url 'job_applications' job.id %}" class="dk-btn-sm" style="background: linear-gradient(135deg, #10b981, #059669);">View Applicants</a>
+                    <form method="post" action="{% url 'job_delete' job.id %}" style="margin: 0;">
+                        {% csrf_token %}
+                        <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Delete this job listing permanently?')">🗑 Delete Job</button>
+                    </form>
+                {% else %}
+                    <!-- If user is logged in as an employer or admin (and isn't the creator) -->
+                    <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.9rem; font-style: italic;">(Only Job Seekers can apply to jobs.)</span>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}?next={{ request.path }}" class="dk-btn-sm">Login to Apply</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

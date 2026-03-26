@@ -4,76 +4,79 @@
 {% block title %}Provider Dashboard — WorkBee{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>Welcome back, {{ user.username }}! 👋</h1>
-    <p>Your job provider dashboard</p>
-</div>
-
-<!-- Stats Row -->
-<div class="features-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 36px;">
-    <div class="feature-card">
-        <div class="feature-icon">📝</div>
-        <h3>{{ total_jobs }}</h3>
-        <p>Total Jobs Posted</p>
+<div class="dark-page">
+    <div class="dk-page-header" style="justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+        <div>
+            <h1 class="dk-title" style="font-size: 2.5rem; margin-bottom: 8px;">Welcome back, {{ user.username }}! 👋</h1>
+            <p class="dk-subtitle" style="font-size: 1.1rem; margin: 0;">Your job provider dashboard</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="{% url 'profile' %}" class="dk-btn-ghost">👤 My Profile</a>
+        </div>
     </div>
-    <div class="feature-card">
-        <div class="feature-icon">✅</div>
-        <h3>{{ active_jobs }}</h3>
-        <p>Active Listings</p>
+
+    <!-- Stats Row -->
+    <div class="dk-cards-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 48px;">
+        <div class="dk-card" style="text-align: center; padding: 32px;">
+            <div class="dk-card-icon" style="margin-bottom: 16px; font-size: 2rem;">📝</div>
+            <h3 style="color: #fff; font-size: 2.5rem; font-weight: 800; margin-bottom: 8px;">{{ total_jobs }}</h3>
+            <p class="dk-card-desc" style="margin: 0; font-size: 1rem;">Total Jobs Posted</p>
+        </div>
+        <div class="dk-card" style="text-align: center; padding: 32px;">
+            <div class="dk-card-icon" style="margin-bottom: 16px; font-size: 2rem;">✅</div>
+            <h3 style="color: #fff; font-size: 2.5rem; font-weight: 800; margin-bottom: 8px;">{{ active_jobs }}</h3>
+            <p class="dk-card-desc" style="margin: 0; font-size: 1rem;">Active Listings</p>
+        </div>
+        <div class="dk-card" style="text-align: center; padding: 32px;">
+            <div class="dk-card-icon" style="margin-bottom: 16px; font-size: 2rem;">👥</div>
+            <h3 style="color: #fff; font-size: 2.5rem; font-weight: 800; margin-bottom: 8px;">{{ total_applicants }}</h3>
+            <p class="dk-card-desc" style="margin: 0; font-size: 1rem;">Total Applicants</p>
+        </div>
     </div>
-    <div class="feature-card">
-        <div class="feature-icon">👥</div>
-        <h3>{{ total_applicants }}</h3>
-        <p>Total Applicants</p>
+
+    <!-- Quick Actions -->
+    <div style="display: flex; gap: 16px; margin-bottom: 48px;">
+        <a href="{% url 'job_create' %}" class="dk-btn-sm" style="padding: 14px 24px; font-size: 1.05rem;">➕ Create New Job</a>
+        <a href="{% url 'my_jobs' %}" class="dk-btn-ghost" style="padding: 14px 24px; font-size: 1.05rem; background: rgba(255, 255, 255, 0.05);">📋 Manage My Listings</a>
     </div>
-</div>
 
-<!-- Quick Actions -->
-<div class="section-header" style="text-align: left;">
-    <h2>Quick Actions</h2>
-</div>
+    <!-- Recent Jobs -->
+    <div class="section-header--dark text-left" style="margin-bottom: 24px;">
+        <h2 style="font-size: 1.5rem;">Your Recent Jobs</h2>
+    </div>
 
-<div class="btn-group mb-3">
-    <a href="{% url 'job_create' %}" class="btn btn-primary">➕ Create New Job</a>
-    <a href="{% url 'my_jobs' %}" class="btn btn-secondary">📋 My Job Listings</a>
-    <a href="{% url 'profile' %}" class="btn btn-secondary">👤 My Profile</a>
-</div>
-
-<!-- Recent Jobs -->
-<div class="section-header" style="text-align: left;">
-    <h2>Your Recent Jobs</h2>
-</div>
-
-{% if jobs %}
-    {% for job in jobs %}
-        <div class="job-card">
-            <div class="job-card-icon">💼</div>
-            <div class="job-card-body">
-                <div class="flex-between">
-                    <div>
-                        <h2><a href="{% url 'job_detail' job.id %}">{{ job.title }}</a></h2>
-                        <div class="card-meta">
-                            <span>📍 {{ job.location|default:"Remote" }}</span>
-                            <span>📅 {{ job.created_at|date:"M j, Y" }}</span>
-                            <span>👥 {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}</span>
+    {% if jobs %}
+        <div class="dk-app-list">
+            {% for job in jobs %}
+                <div class="dk-app-card">
+                    <div class="dk-app-main">
+                        <div class="dk-app-icon">💼</div>
+                        <div class="dk-app-info">
+                            <h3><a href="{% url 'job_detail' job.id %}">{{ job.title }}</a></h3>
+                            <div class="dk-app-meta">
+                                <span>📍 {{ job.location|default:"Remote" }}</span>
+                                <span>📅 {{ job.created_at|date:"M j, Y" }}</span>
+                                <span>👥 {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="dk-app-status">
                         {% if job.is_active %}
-                            <span class="badge badge-active">Active</span>
+                            <span class="dk-badge dk-badge--green">Active</span>
                         {% else %}
-                            <span class="badge badge-inactive">Closed</span>
+                            <span class="dk-badge dk-badge--red">Closed</span>
                         {% endif %}
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-{% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📝</div>
-        <p>You haven't posted any jobs yet.</p>
-        <a href="{% url 'job_create' %}" class="btn btn-primary">Post Your First Job</a>
-    </div>
-{% endif %}
+    {% else %}
+        <div class="dk-empty">
+            <div class="dk-empty-icon">📝</div>
+            <h3>No jobs posted</h3>
+            <p>You haven't posted any jobs yet. Start hiring today!</p>
+            <a href="{% url 'job_create' %}" class="dk-btn-sm" style="margin-top: 16px;">Post Your First Job</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

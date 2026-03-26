@@ -41,7 +41,9 @@ def register_seeker(request):
             })
 
         user = User.objects.create_user(username=username, email=email, password=password)
-        Profile.objects.create(user=user, role="seeker")
+        profile = user.profile
+        profile.role = "seeker"
+        profile.save()
         login(request, user)
         return redirect("seeker_dashboard")
 
@@ -64,7 +66,9 @@ def register_provider(request):
             })
 
         user = User.objects.create_user(username=username, email=email, password=password)
-        Profile.objects.create(user=user, role="provider")
+        profile = user.profile
+        profile.role = "provider"
+        profile.save()
         login(request, user)
         return redirect("provider_dashboard")
 

@@ -4,34 +4,45 @@
 {% block title %}Register — Choose Account Type{% endblock %}
 
 {% block content %}
-<div class="page-header text-center">
-    <h1>Join WorkBee</h1>
-    <p>Choose your account type to get started</p>
-</div>
-
-<div class="features-grid" style="grid-template-columns: 1fr 1fr; max-width: 700px; margin: 0 auto;">
-    <!-- Seeker Card -->
-    <a href="{% url 'register_seeker' %}" class="feature-card" style="text-decoration: none; cursor: pointer;">
-        <div class="feature-icon">🔍</div>
-        <h3>Job Seeker</h3>
-        <p>Browse job listings, apply to positions, and track your applications.</p>
-        <div class="mt-2">
-            <span class="btn btn-primary btn-sm">Register as Seeker</span>
+<div class="dark-page dark-page--inner text-center">
+    <div class="dk-page-header" style="justify-content: center; margin-bottom: 48px;">
+        <div>
+            <h1 class="dk-title" style="font-size: 2.5rem; margin-bottom: 16px;">Join WorkBee</h1>
+            <p class="dk-subtitle" style="font-size: 1.1rem;">Choose your account type to get started</p>
         </div>
-    </a>
+    </div>
 
-    <!-- Provider Card -->
-    <a href="{% url 'register_provider' %}" class="feature-card" style="text-decoration: none; cursor: pointer;">
-        <div class="feature-icon">🏢</div>
-        <h3>Job Provider</h3>
-        <p>Post job openings, review applicants, and manage your listings.</p>
-        <div class="mt-2">
-            <span class="btn btn-primary btn-sm">Register as Provider</span>
-        </div>
-    </a>
+    <div class="dk-cards-grid" style="grid-template-columns: 1fr 1fr; max-width: 800px; margin: 0 auto 32px auto;">
+        <!-- Seeker Card -->
+        <a href="{% url 'register_seeker' %}" class="dk-card" style="text-decoration: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;">
+            <div class="dk-card-icon" style="font-size: 3rem; margin-bottom: 8px;">🔍</div>
+            <h3 class="dk-card-title" style="color: #fff; font-size: 1.4rem; margin: 0;">Job Seeker</h3>
+            <p class="dk-card-desc" style="margin: 0;">Browse job listings, apply to positions, and track your applications.</p>
+            <div style="margin-top: auto; padding-top: 24px;">
+                <span class="dk-btn-sm" style="pointer-events: none;">Register as Seeker</span>
+            </div>
+        </a>
+
+        <!-- Provider Card -->
+        <a href="{% url 'register_provider' %}" class="dk-card" style="text-decoration: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;">
+            <div class="dk-card-icon" style="font-size: 3rem; margin-bottom: 8px;">🏢</div>
+            <h3 class="dk-card-title" style="color: #fff; font-size: 1.4rem; margin: 0;">Job Provider</h3>
+            <p class="dk-card-desc" style="margin: 0;">Post job openings, review applicants, and manage your listings.</p>
+            <div style="margin-top: auto; padding-top: 24px;">
+                <span class="dk-btn-sm" style="pointer-events: none; background: linear-gradient(135deg, #10b981, #059669);">Register as Provider</span>
+            </div>
+        </a>
+    </div>
+
+    <p style="color: rgba(255, 255, 255, 0.6); font-size: 1rem;">
+        Already have an account? <a href="{% url 'login' %}" style="color: #a78bfa; text-decoration: none; font-weight: 600;">Sign in</a>
+    </p>
+
+    <!-- Responsive overriding for the split layout -->
+    <style>
+        @media (max-width: 768px) {
+            .dk-cards-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
 </div>
-
-<p class="text-center mt-3" style="color: var(--grey-500);">
-    Already have an account? <a href="{% url 'login' %}">Sign in</a>
-</p>
 {% endblock %}
