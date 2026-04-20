@@ -49,7 +49,8 @@ check("Seeker register page loads", r.status_code == 200)
 
 r = c.post('/accounts/register/seeker/', {
     'username': 'alice', 'email': 'alice@test.com',
-    'password': 'TestPass123!'
+    'password': 'TestPass123!',
+    'first_name': 'Alice'
 }, follow=True)
 check("Seeker registration succeeds", r.status_code == 200)
 alice = User.objects.get(username='alice')
@@ -65,7 +66,9 @@ check("Provider register page loads", r.status_code == 200)
 
 r = c.post('/accounts/register/provider/', {
     'username': 'bob', 'email': 'bob@test.com',
-    'password': 'TestPass123!'
+    'password': 'TestPass123!',
+    'first_name': 'Bob',
+    'company_name': 'TechCorp'
 }, follow=True)
 check("Provider registration succeeds", r.status_code == 200)
 bob = User.objects.get(username='bob')

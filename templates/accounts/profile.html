@@ -4,6 +4,24 @@
 {% block title %}My Profile — WorkBee{% endblock %}
 
 {% block content %}
+<style>
+    .profile-readonly .dk-search-input, .profile-readonly .dk-select {
+        background: transparent !important;
+        border-color: transparent !important;
+        pointer-events: none;
+        -webkit-appearance: none;
+        appearance: none;
+        padding-left: 0;
+        color: #fff;
+        font-weight: 500;
+    }
+    .profile-readonly .edit-only {
+        display: none !important;
+    }
+    .profile-editable .view-only {
+        display: none !important;
+    }
+</style>
 <div class="dark-page dark-page--inner">
     <div class="dk-page-header">
         <div>
@@ -18,7 +36,7 @@
     <!-- Edit Profile Form -->
     <div style="display: flex; justify-content: center; width: 100%;">
         <div class="dk-card" style="width: 100%; max-width: 800px; padding: 40px;">
-            <form method="post" action="{% url 'profile' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
+            <form id="profile-form" class="profile-readonly" method="post" action="{% url 'profile' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
                 {% csrf_token %}
 
                 <!-- Avatar Section -->
@@ -38,13 +56,13 @@
                         <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin: 0;">{{ profile.user.first_name|default:profile.user.username }}</h2>
                         <span class="dk-badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); display: inline-block; width: max-content; padding: 4px 10px;">{{ profile.role|upper }}</span>
                         <!-- Custom Photo Upload for the specific role -->
-                        <div style="margin-top: 8px;">
+                        <div class="edit-only" style="margin-top: 8px;">
                             {% if profile.role == 'seeker' %}
                                 <label style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Change Profile Photo</label>
-                                <input type="file" name="profile_photo" style="display:block; font-size: 0.85rem; color: #fff;">
+                                <input type="file" name="profile_photo" class="edit-only" style="display:block; font-size: 0.85rem; color: #fff;">
                             {% elif profile.role == 'provider' %}
                                 <label style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Change Company Logo</label>
-                                <input type="file" name="company_logo" style="display:block; font-size: 0.85rem; color: #fff;">
+                                <input type="file" name="company_logo" class="edit-only" style="display:block; font-size: 0.85rem; color: #fff;">
                             {% endif %}
                         </div>
                     </div>
@@ -121,8 +139,8 @@
                             <a href="{{ profile.resume.url }}" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600;">📄 View Current Resume</a>
                         </div>
                     {% endif %}
-                    <input type="file" name="resume" class="dk-search-input" style="width: 100%; border-radius: 10px; padding: 6px;">
-                    <small style="color: rgba(255,255,255,0.4);">Uploading a new file will replace your current resume.</small>
+                    <input type="file" name="resume" class="dk-search-input edit-only" style="width: 100%; border-radius: 10px; padding: 6px;">
+                    <small class="edit-only" style="color: rgba(255,255,255,0.4);">Uploading a new file will replace your current resume.</small>
                 </div>
 
                 <div class="section-header--dark text-left" style="margin-top: 16px;">
@@ -223,7 +241,12 @@
                 {% endif %}
 
                 <div style="margin-top: 24px; text-align: right; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-                    <button type="submit" class="dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Save Changes</button>
+                    <button type="button" id="edit-btn" class="view-only dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Edit Profile</button>
+                    
+                    <div class="edit-only" style="display: flex; gap: 16px; justify-content: flex-end;">
+                        <button type="button" id="cancel-btn" class="dk-btn-ghost" style="padding: 14px 32px; font-size: 1.05rem; color: #fff; background: rgba(255,255,255,0.05);">Cancel</button>
+                        <button type="submit" class="dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Save Changes</button>
+                    </div>
                 </div>
 
             </form>
@@ -247,6 +270,24 @@
         const cs = "{{ profile.company_size|default:'' }}";
         if (cs && document.getElementById('company_size_select')) {
             document.getElementById('company_size_select').value = cs;
+        }
+
+        const form = document.getElementById('profile-form');
+        const editBtn = document.getElementById('edit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+
+        if (editBtn && cancelBtn) {
+            editBtn.addEventListener('click', () => {
+                form.classList.remove('profile-readonly');
+                form.classList.add('profile-editable');
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                form.classList.add('profile-readonly');
+                form.classList.remove('profile-editable');
+                // Reset form values to original state
+                form.reset();
+            });
         }
     });
 </script>
