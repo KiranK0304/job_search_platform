@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WorkBee Database Tables</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #333; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 40px; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 12px 16px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        tr:nth-child(even) { background-color: #fcfcfc; }
+    </style>
+</head>
+<body>
+
+    <h1>WorkBee Application Database Schema</h1>
+    <p><em>To copy these to MS Word: Select All (Ctrl+A), Copy (Ctrl+C), and Paste (Ctrl+V) into your document. The tables will preserve their structure perfectly.</em></p>
+
+    <h2>1. Table: <code>auth_user</code> (Django Built-in User)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Constraints / Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto-increment</td>
+            </tr>
+            <tr>
+                <td>username</td>
+                <td>Varchar(150)</td>
+                <td>Unique, Required. Identifier for login.</td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td>Varchar(128)</td>
+                <td>Required. Hashed password string.</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>Varchar(254)</td>
+                <td>Optional/Required depending on config.</td>
+            </tr>
+            <tr>
+                <td>is_active</td>
+                <td>Boolean</td>
+                <td>Default: True. Designates if account is active.</td>
+            </tr>
+            <tr>
+                <td>date_joined</td>
+                <td>DateTime</td>
+                <td>Automatically set on creation.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Table: <code>profiles</code></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Constraints / Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto-increment</td>
+            </tr>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (auth_user.id), Unique (One-to-One), CASCADE delete</td>
+            </tr>
+            <tr>
+                <td>role</td>
+                <td>Varchar(10)</td>
+                <td>Choices: 'seeker', 'provider'</td>
+            </tr>
+            <tr>
+                <td>bio</td>
+                <td>LongText</td>
+                <td>Optional description of the user/company.</td>
+            </tr>
+            <tr>
+                <td>location</td>
+                <td>Varchar(100)</td>
+                <td>Optional physical location.</td>
+            </tr>
+            <tr>
+                <td>created_at</td>
+                <td>DateTime</td>
+                <td>Auto-generated timestamp.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Table: <code>jobs</code></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Constraints / Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto-increment</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>Varchar(200)</td>
+                <td>Required. Name of the job position.</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>LongText</td>
+                <td>Required. Full details of the job.</td>
+            </tr>
+            <tr>
+                <td>location</td>
+                <td>Varchar(100)</td>
+                <td>Optional. E.g. 'Remote', 'New York'.</td>
+            </tr>
+            <tr>
+                <td>created_by_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (auth_user.id), CASCADE delete. The provider.</td>
+            </tr>
+            <tr>
+                <td>is_active</td>
+                <td>Boolean</td>
+                <td>Default: True. Whether job is open.</td>
+            </tr>
+            <tr>
+                <td>created_at</td>
+                <td>DateTime</td>
+                <td>Auto-generated on creation.</td>
+            </tr>
+            <tr>
+                <td>updated_at</td>
+                <td>DateTime</td>
+                <td>Auto-updates on modification.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. Table: <code>saved_jobs</code></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Constraints / Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto-increment</td>
+            </tr>
+            <tr>
+                <td>job_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (jobs.id), CASCADE delete.</td>
+            </tr>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (auth_user.id), CASCADE delete. The seeker.</td>
+            </tr>
+            <tr>
+                <td>saved_at</td>
+                <td>DateTime</td>
+                <td>Auto-generated timestamp.</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="background-color: #f8fafc; font-style: italic;">
+                    <strong>Note:</strong> Unique constraint on the combination of (job_id, user_id).
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <h2>5. Table: <code>applications</code></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Data Type</th>
+                <th>Constraints / Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto-increment</td>
+            </tr>
+            <tr>
+                <td>job_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (jobs.id), CASCADE delete.</td>
+            </tr>
+            <tr>
+                <td>applicant_id</td>
+                <td>Integer</td>
+                <td>Foreign Key (auth_user.id), CASCADE delete. The seeker.</td>
+            </tr>
+            <tr>
+                <td>cover_letter</td>
+                <td>LongText</td>
+                <td>Optional. Message to the employer.</td>
+            </tr>
+            <tr>
+                <td>status</td>
+                <td>Varchar(10)</td>
+                <td>Choices: 'pending', 'accepted', 'rejected'. Default: 'pending'.</td>
+            </tr>
+            <tr>
+                <td>applied_at</td>
+                <td>DateTime</td>
+                <td>Auto-generated timestamp.</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="background-color: #f8fafc; font-style: italic;">
+                    <strong>Note:</strong> Unique constraint on the combination of (job_id, applicant_id) to prevent duplicate applications.
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>

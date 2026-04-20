@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.db import transaction, IntegrityError
 
 from .models import Profile
 from .decorators import seeker_required, provider_required
+from .forms import RegistrationForm
 from jobs.models import Job
 from applications.models import Application
 
@@ -31,21 +33,23 @@ def register_seeker(request):
         return _dashboard_redirect(request.user)
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        if User.objects.filter(username=username).exists():
-            return render(request, "accounts/register_seeker.html", {
-                "error": "Username already taken."
-            })
-
-        user = User.objects.create_user(username=username, email=email, password=password)
-        profile = user.profile
-        profile.role = "seeker"
-        profile.save()
-        login(request, user)
-        return redirect("seeker_dashboard")
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = form.save(commit=False)
+                    user.set_password(form.cleaned_data["password"])
+                    user.save()
+                    profile = user.profile
+                    profile.role = "seeker"
+                    profile.save()
+                login(request, user)
+                return redirect("seeker_dashboard")
+            except IntegrityError:
+                form.add_error("username", "A user with that username already exists.")
+        
+        error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
+        return render(request, "accounts/register_seeker.html", {"error": error})
 
     return render(request, "accounts/register_seeker.html")
 
@@ -56,21 +60,23 @@ def register_provider(request):
         return _dashboard_redirect(request.user)
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        if User.objects.filter(username=username).exists():
-            return render(request, "accounts/register_provider.html", {
-                "error": "Username already taken."
-            })
-
-        user = User.objects.create_user(username=username, email=email, password=password)
-        profile = user.profile
-        profile.role = "provider"
-        profile.save()
-        login(request, user)
-        return redirect("provider_dashboard")
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = form.save(commit=False)
+                    user.set_password(form.cleaned_data["password"])
+                    user.save()
+                    profile = user.profile
+                    profile.role = "provider"
+                    profile.save()
+                login(request, user)
+                return redirect("provider_dashboard")
+            except IntegrityError:
+                form.add_error("username", "A user with that username already exists.")
+        
+        error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
+        return render(request, "accounts/register_provider.html", {"error": error})
 
     return render(request, "accounts/register_provider.html")
 
