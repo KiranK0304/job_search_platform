@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib import messages
 
 from accounts.decorators import provider_required, seeker_required
 from .models import Job, SavedJob
@@ -87,6 +88,7 @@ def job_create(request):
             location=location,
             created_by=request.user,
         )
+        messages.success(request, "Job created successfully!")
         return redirect("job_detail", job_id=job.id)
 
     return render(request, "jobs/job_create.html")
@@ -103,6 +105,7 @@ def job_delete(request, job_id):
     if request.method == "POST":
         job.is_active = False
         job.save()
+        messages.success(request, "Job has been closed successfully.")
         next_url = request.POST.get("next", "")
         if next_url:
             return redirect(next_url)
@@ -126,8 +129,10 @@ def save_job(request, job_id):
     existing = SavedJob.objects.filter(job=job, user=request.user)
     if existing.exists():
         existing.delete()
+        messages.info(request, f"Removed '{job.title}' from saved jobs.")
     else:
         SavedJob.objects.create(job=job, user=request.user)
+        messages.success(request, f"Job '{job.title}' saved successfully.")
 
     next_url = request.POST.get("next", request.GET.get("next", ""))
     if next_url:

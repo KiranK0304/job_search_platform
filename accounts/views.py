@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import transaction, IntegrityError
+from django.contrib import messages
 
 from .models import Profile
 from .decorators import seeker_required, provider_required
@@ -44,6 +45,7 @@ def register_seeker(request):
                     profile.role = "seeker"
                     profile.save()
                 login(request, user)
+                messages.success(request, "Account created successfully! Welcome to WorkBee.")
                 return redirect("seeker_dashboard")
             except IntegrityError:
                 form.add_error("username", "A user with that username already exists.")
@@ -71,6 +73,7 @@ def register_provider(request):
                     profile.role = "provider"
                     profile.save()
                 login(request, user)
+                messages.success(request, "Employer account created successfully!")
                 return redirect("provider_dashboard")
             except IntegrityError:
                 form.add_error("username", "A user with that username already exists.")
@@ -94,6 +97,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            messages.success(request, f"Welcome back, {user.username}!")
             return _dashboard_redirect(user)
         else:
             return render(request, "accounts/login.html", {
@@ -107,6 +111,7 @@ def login_view(request):
 def logout_view(request):
     """Log the user out."""
     logout(request)
+    messages.info(request, "You have successfully logged out.")
     return redirect("home")
 
 

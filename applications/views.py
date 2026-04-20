@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 
 from accounts.decorators import seeker_required, provider_required
 from jobs.models import Job
@@ -11,8 +12,13 @@ def apply_to_job(request, job_id):
     """Allow a seeker to apply to a job."""
     job = get_object_or_404(Job, id=job_id)
 
+    if not job.is_active:
+        messages.error(request, "This job is no longer accepting applications.")
+        return redirect("job_detail", job_id=job.id)
+
     # Already applied — bounce back
     if Application.objects.filter(job=job, applicant=request.user).exists():
+        messages.error(request, "You have already applied to this job.")
         return redirect("job_detail", job_id=job.id)
 
     if request.method == "POST":
@@ -22,6 +28,7 @@ def apply_to_job(request, job_id):
             applicant=request.user,
             cover_letter=cover_letter,
         )
+        messages.success(request, "Your application has been submitted successfully!")
         # If came from job list page, go back there
         next_url = request.POST.get("next", "")
         if next_url:
@@ -43,6 +50,7 @@ def withdraw_application(request, app_id):
     if request.method == "POST":
         job_id = application.job.id
         application.delete()
+        messages.success(request, "Application withdrawn successfully.")
         # If came from a specific page, go back there
         next_url = request.POST.get("next", "")
         if next_url:
@@ -113,5 +121,6 @@ def update_application_status(request, app_id):
     if new_status in [Application.Status.ACCEPTED, Application.Status.REJECTED]:
         application.status = new_status
         application.save()
+        messages.success(request, f"Application status updated to {new_status}.")
 
     return redirect("job_applications", job_id=application.job.id)
