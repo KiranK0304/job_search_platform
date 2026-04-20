@@ -34,7 +34,7 @@
                     <li><a href="{% url 'my_applications' %}">Applied</a></li>
                     <li><a href="{% url 'seeker_dashboard' %}">Dashboard</a></li>
                     {% elif user.profile.role == "provider" %}
-                    <li><a href="{% url 'my_jobs' %}">My Jobs</a></li>
+                    <li><a href="{% url 'my_jobs' %}">Applications</a></li>
                     <li><a href="{% url 'job_create' %}">Create Job</a></li>
                     <li><a href="{% url 'provider_dashboard' %}">Dashboard</a></li>
                     {% endif %}
