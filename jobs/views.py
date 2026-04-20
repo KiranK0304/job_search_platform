@@ -116,9 +116,35 @@ def job_delete(request, job_id):
 
 @provider_required
 def my_jobs(request):
-    """Show all jobs created by the logged-in provider."""
-    jobs = Job.objects.filter(created_by=request.user).order_by("-created_at")
-    return render(request, "jobs/my_jobs.html", {"jobs": jobs})
+    """Unified Dashboard showing all applications to the provider's jobs."""
+    from applications.models import Application
+    
+    # All applications for jobs created by this provider
+    applications = Application.objects.filter(
+        job__created_by=request.user
+    ).select_related("job", "applicant", "applicant__profile").order_by("-applied_at")
+
+    # Fetch provider's active/total jobs just for the filter dropdown
+    provider_jobs = Job.objects.filter(created_by=request.user)
+
+    job_filter = request.GET.get('job_id', 'all')
+    status_filter = request.GET.get('status', 'all')
+    
+    if job_filter != 'all':
+        try:
+            applications = applications.filter(job_id=int(job_filter))
+        except ValueError:
+            pass
+            
+    if status_filter in ['pending', 'accepted', 'rejected']:
+        applications = applications.filter(status=status_filter)
+
+    return render(request, "jobs/my_jobs.html", {
+        "applications": applications,
+        "provider_jobs": provider_jobs,
+        "job_filter": str(job_filter),
+        "status_filter": status_filter,
+    })
 
 
 @seeker_required

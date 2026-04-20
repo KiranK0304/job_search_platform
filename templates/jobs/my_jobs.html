@@ -1,56 +1,144 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}My Jobs — WorkBee{% endblock %}
+{% block title %}All Applications — My Listings — WorkBee{% endblock %}
 
 {% block content %}
 <div class="dark-page dark-page--inner">
-    <div class="dk-page-header" style="justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+    <div class="dk-page-header" style="justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
         <div>
-            <h1 class="dk-title" style="font-size: 2.5rem; margin-bottom: 8px;">My Job Listings</h1>
-            <p class="dk-subtitle" style="font-size: 1.1rem; margin: 0;">Manage the jobs you've posted</p>
+            <h1 class="dk-title" style="font-size: 2.5rem; margin-bottom: 8px;">Incoming Applications</h1>
+            <p class="dk-subtitle" style="font-size: 1.1rem; margin: 0;">Review candidates across all your active and closed job listings.</p>
         </div>
         <div style="display: flex; gap: 12px;">
             <a href="{% url 'job_create' %}" class="dk-btn-sm" style="background: linear-gradient(135deg, #10b981, #059669);">➕ Post a New Job</a>
         </div>
     </div>
 
-    {% if jobs %}
+    <!-- Active Filters -->
+    <form method="get" action="{% url 'my_jobs' %}" style="display: flex; gap: 16px; margin-bottom: 40px; background: rgba(0,0,0,0.25); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); align-items: flex-end;">
+        <div style="flex: 1;">
+            <label style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; display: block;">Specific Job Listing</label>
+            <select name="job_id" class="dk-select" style="width: 100%; border-radius: 10px;" onchange="this.form.submit()">
+                <option value="all">🌐 Everything (All Job Listings)</option>
+                {% for p_job in provider_jobs %}
+                    <option value="{{ p_job.id }}" {% if p_job.id|stringformat:"s" == job_filter %}selected{% endif %}>{{ p_job.title }} — {{ p_job.location|default:"Remote" }} {% if not p_job.is_active %}[Closed]{% endif %}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="width: 250px;">
+            <label style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; display: block;">Application Status</label>
+            <select name="status" class="dk-select" style="width: 100%; border-radius: 10px;" onchange="this.form.submit()">
+                <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>⏳ Pending Triage</option>
+                <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>✅ Accepted</option>
+                <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>❌ Declined</option>
+            </select>
+        </div>
+        
+        <div>
+            <a href="{% url 'my_jobs' %}" class="dk-btn-ghost" style="padding: 12px 24px; height: 100%;">Reset Filters</a>
+        </div>
+    </form>
+
+    {% if applications %}
         <div class="dk-app-list">
-            {% for job in jobs %}
-                <div class="dk-app-card" style="align-items: flex-start; position: relative;">
+            {% for app in applications %}
+                <div class="dk-app-card" style="align-items: flex-start; border-left: 4px solid {% if app.status == 'pending' %}#eab308{% elif app.status == 'accepted' %}#10b981{% else %}#ef4444{% endif %};">
                     <div class="dk-app-main" style="width: 100%;">
-                        <div class="dk-app-icon" style="background: rgba(167, 139, 250, 0.15);">💼</div>
+                        <div class="dk-app-icon" style="background: rgba(139, 92, 246, 0.15); width: 64px; height: 64px; font-size: 1.8rem;">
+                            {% if app.applicant.profile.profile_photo %}
+                                <img src="{{ app.applicant.profile.profile_photo.url }}" alt="{{ app.applicant.username }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            {% else %}
+                                👤
+                            {% endif %}
+                        </div>
                         <div class="dk-app-info" style="flex: 1;">
-                            <h2 style="font-size: 1.3rem; color: #fff; margin-bottom: 8px;">
-                                <a href="{% url 'job_detail' job.id %}" style="color: inherit; text-decoration: none;">{{ job.title }}</a>
-                            </h2>
-                            <div class="dk-app-meta" style="margin-bottom: 16px;">
-                                <span>📍 {{ job.location|default:"Remote" }}</span>
-                                <span>📅 Posted {{ job.created_at|date:"M j, Y" }}</span>
-                                <span>👥 {{ job.applications.count }} applicant{{ job.applications.count|pluralize }}</span>
-                                
-                                {% if job.is_active %}
-                                    <span class="dk-badge dk-badge--green" style="margin-left: auto;">Active</span>
-                                {% else %}
-                                    <span class="dk-badge dk-badge--red" style="margin-left: auto;">Closed</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <h3 style="font-size: 1.5rem; color: #fff; margin: 0 0 4px 0;">
+                                    {{ app.applicant.first_name|default:app.applicant.username }} {{ app.applicant.last_name|default:"" }}
+                                </h3>
+                                <div class="dk-badge dk-badge--{% if app.status == 'pending' %}yellow{% elif app.status == 'accepted' %}green{% else %}red{% endif %}" style="padding: 6px 16px; font-size: 0.9rem;">
+                                    <span class="status-dot dk-dot--{{ app.status }}"></span> {{ app.get_status_display }}
+                                </div>
+                            </div>
+                            
+                            <!-- Application Meta Context -->
+                            <div class="dk-app-meta" style="margin-bottom: 12px; gap: 16px; display: flex; flex-wrap: wrap;">
+                                <a href="{% url 'job_detail' app.job.id %}" style="color: #a78bfa; font-weight: 700; text-decoration: none; padding: 4px 12px; background: rgba(167, 139, 250, 0.15); border-radius: 8px;">
+                                    💼 Role: {{ app.job.title }}
+                                </a>
+                                <span>📧 {{ app.applicant.email|default:"No email" }}</span>
+                                <span>📅 Applied: {{ app.applied_at|date:"M j, Y" }}</span>
+                                {% if app.applicant.profile.current_job_title %}
+                                    <span>🎯 {{ app.applicant.profile.current_job_title }}</span>
+                                {% endif %}
+                                {% if app.applicant.profile.years_of_experience %}
+                                    <span>📈 {{ app.applicant.profile.years_of_experience }} YOE</span>
                                 {% endif %}
                             </div>
 
-                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
-                                {{ job.description|truncatewords:25 }}
-                            </p>
+                            {% if app.cover_letter %}
+                                <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; margin-top: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                                    <p style="color: rgba(255, 255, 255, 0.85); font-size: 0.95rem; line-height: 1.6; margin: 0; font-style: italic;">
+                                        "{{ app.cover_letter }}"
+                                    </p>
+                                </div>
+                            {% endif %}
                             
-                            <!-- Action Buttons -->
-                            <div style="display: flex; gap: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
-                                <a href="{% url 'job_applications' job.id %}" class="dk-btn-ghost" style="flex: 1; text-align: center; justify-content: center;">👥 View Applicants</a>
-                                
-                                <form method="post" action="{% url 'job_delete' job.id %}" style="margin:0; flex: 1;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{% url 'my_jobs' %}">
-                                    <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" style="width: 100%; justify-content: center;" onclick="return confirm('Delete this job listing permanently?')">🗑 Delete Job</button>
-                                </form>
-                            </div>
+                            <!-- CV / Resume Links -->
+                            {% if app.applicant.profile.resume %}
+                                <div style="margin-top: 16px;">
+                                    <a href="{{ app.applicant.profile.resume.url }}" target="_blank" class="dk-btn-sm" style="background: rgba(255,255,255,0.05); padding: 8px 16px; font-size: 0.9rem; color: #fff;">📄 Preview Applicant Resume</a>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Contact Expansion if accepted -->
+                            {% if app.status == 'accepted' %}
+                                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 16px; margin-top: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px;">
+                                    <span style="font-size: 2rem;">📞</span>
+                                    <div>
+                                        <span style="color: #4ade80; font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 4px;">Candidate Accepted — Internal Contact Provided</span>
+                                        <span style="color: #fff; font-size: 1.1rem; font-weight: 600;">{{ app.applicant.profile.phone_number|default:"[No direct phone number was provided]" }}</span>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Rejected Feedback Loop Details -->
+                            {% if app.status == 'rejected' and app.feedback %}
+                                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); padding: 16px; margin-top: 16px; border-radius: 12px;">
+                                    <span style="color: #ef4444; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 4px;">You commented on this rejection:</span>
+                                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin: 0; font-style: italic;">
+                                        "{{ app.feedback }}"
+                                    </p>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Status Action Mutators -->
+                            {% if app.status == 'pending' %}
+                                <div style="margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                                    <div id="action-buttons-{{ app.id }}" style="display: flex; gap: 8px;">
+                                        <form method="post" action="{% url 'update_application_status' app.id %}?next={{ request.get_full_path|urlencode }}" style="margin: 0; flex: 1;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="status" value="accepted">
+                                            <button type="submit" class="dk-btn-sm" style="background: linear-gradient(135deg, #10b981, #059669); padding: 12px 16px; width: 100%; font-size: 1rem;">Accept Candidate</button>
+                                        </form>
+                                        <button type="button" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 12px 16px; flex: 1; font-size: 1rem;" onclick="document.getElementById('decline-form-{{ app.id }}').style.display = 'flex'; document.getElementById('action-buttons-{{ app.id }}').style.display = 'none';">Decline Candidate</button>
+                                    </div>
+                                    
+                                    <form id="decline-form-{{ app.id }}" method="post" action="{% url 'update_application_status' app.id %}?next={{ request.get_full_path|urlencode }}" style="display: none; flex-direction: column; gap: 8px; background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="rejected">
+                                        <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem; font-weight: 600;">Decline Application & Provide Feedback (Optional)</span>
+                                        <textarea name="feedback" class="dk-search-input" placeholder="Give the candidate context on why they were skipped..." style="width: 100%; border-radius: 8px; min-height: 80px; font-size: 0.85rem; padding: 12px; resize: vertical; border-color: rgba(255,255,255,0.1);"></textarea>
+                                        <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                            <button type="button" class="dk-btn-ghost" style="padding: 8px 16px; flex: 1; background: rgba(255,255,255,0.05);" onclick="document.getElementById('decline-form-{{ app.id }}').style.display = 'none'; document.getElementById('action-buttons-{{ app.id }}').style.display = 'flex';">Cancel</button>
+                                            <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 8px 16px; flex: 1;">Confirm Decline</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -58,10 +146,15 @@
         </div>
     {% else %}
         <div class="dk-empty">
-            <div class="dk-empty-icon">📝</div>
-            <h3>No jobs posted yet</h3>
-            <p>You haven't posted any jobs. Start building your team today!</p>
-            <a href="{% url 'job_create' %}" class="dk-btn-sm" style="margin-top: 16px; background: linear-gradient(135deg, #10b981, #059669);">Post Your First Job</a>
+            <div class="dk-empty-icon">📭</div>
+            <h3>No Candidates Found</h3>
+            {% if status_filter != 'all' or job_filter != 'all' %}
+                <p>There are no applications matching your current filter criteria.</p>
+                <a href="{% url 'my_jobs' %}" class="dk-btn-ghost" style="margin-top: 16px; background: rgba(255,255,255,0.05);">Reset Filters</a>
+            {% else %}
+                <p>Your job listings haven't received any applicants yet. Stay hopeful!</p>
+                <a href="{% url 'job_create' %}" class="dk-btn-sm" style="margin-top: 16px; background: linear-gradient(135deg, #10b981, #059669);">Post a New Listing</a>
+            {% endif %}
         </div>
     {% endif %}
 </div>

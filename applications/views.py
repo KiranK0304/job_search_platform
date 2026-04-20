@@ -120,7 +120,17 @@ def update_application_status(request, app_id):
     new_status = request.POST.get("status")
     if new_status in [Application.Status.ACCEPTED, Application.Status.REJECTED]:
         application.status = new_status
+        # Bind feedback optionally
+        if new_status == Application.Status.REJECTED:
+            feedback = request.POST.get("feedback", "").strip()
+            if feedback:
+                application.feedback = feedback
+        
         application.save()
         messages.success(request, f"Application status updated to {new_status}.")
+
+    next_url = request.GET.get('next') or request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
 
     return redirect("job_applications", job_id=application.job.id)
