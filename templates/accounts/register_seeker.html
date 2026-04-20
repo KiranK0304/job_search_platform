@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="dark-page dark-page--inner flex-center" style="min-height: 80vh;">
-    <div class="dk-card" style="max-width: 500px; width: 100%; padding: 48px;">
+    <div class="dk-card" style="max-width: 600px; width: 100%; padding: 48px;">
         <div style="text-align: center; margin-bottom: 32px;">
             <div style="font-size: 3rem; margin-bottom: 16px;">🔍</div>
             <h1 class="dk-title" style="font-size: 2rem; margin-bottom: 8px;">Create Seeker Account</h1>
@@ -13,51 +13,149 @@
         </div>
 
         {% if error %}
-        <div
-            style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; text-align: center; font-size: 0.95rem;">
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; text-align: center; font-size: 0.95rem;">
             ⚠️ {{ error }}
         </div>
         {% endif %}
 
-        <form method="post" action="{% url 'register_seeker' %}"
-            style="display: flex; flex-direction: column; gap: 20px;">
+        <form method="post" action="{% url 'register_seeker' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
             {% csrf_token %}
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="username"
-                    style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Username</label>
-                <input type="text" id="username" name="username" class="dk-search-input"
-                    style="width: 100%; border-radius: 10px;" placeholder="Choose a username" value="{{ form_data.username|default:'' }}" required>
+            <div class="section-header--dark text-left" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+                <h3 style="color: #fff; font-size: 1.2rem;">Basic Information</h3>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">First Name</label>
+                    <input type="text" name="first_name" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.first_name|default:'' }}" required>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Last Name</label>
+                    <input type="text" name="last_name" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.last_name|default:'' }}">
+                </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="email"
-                    style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Email</label>
-                <input type="text" id="email" name="email" class="dk-search-input"
-                    style="width: 100%; border-radius: 10px;" placeholder="you@example.com" value="{{ form_data.email|default:'' }}" required>
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Username</label>
+                <input type="text" name="username" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.username|default:'' }}" required>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="password"
-                    style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Password</label>
-                <input type="password" id="password" name="password" class="dk-search-input"
-                    style="width: 100%; border-radius: 10px;" placeholder="Create a strong password" required>
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Email</label>
+                <input type="email" name="email" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.email|default:'' }}" required>
             </div>
 
-            <button type="submit" class="dk-btn-sm"
-                style="width: 100%; justify-content: center; padding: 14px; margin-top: 8px; font-size: 1.05rem;">Register</button>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Password</label>
+                <input type="password" name="password" class="dk-search-input" style="width: 100%; border-radius: 10px;" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Phone Number</label>
+                <input type="text" name="phone_number" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.phone_number|default:'' }}">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Profile Photo (Optional)</label>
+                <input type="file" name="profile_photo" class="dk-search-input" style="width: 100%; border-radius: 10px; padding: 6px;">
+            </div>
+
+            <div class="section-header--dark text-left" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 16px;">
+                <h3 style="color: #fff; font-size: 1.2rem;">Professional Details</h3>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Current Job Title</label>
+                    <input type="text" name="current_job_title" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.current_job_title|default:'' }}">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Years of Experience</label>
+                    <input type="number" name="years_of_experience" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.years_of_experience|default:'' }}">
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Primary Skills</label>
+                <input type="text" name="primary_skills" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Python, SQL, React" value="{{ form_data.primary_skills|default:'' }}">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Industry</label>
+                    <input type="text" name="seeker_industry" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.seeker_industry|default:'' }}">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Highest Education</label>
+                    <input type="text" name="education" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.education|default:'' }}">
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Resume / CV Upload</label>
+                <input type="file" name="resume" class="dk-search-input" style="width: 100%; border-radius: 10px; padding: 6px;">
+            </div>
+
+            <div class="section-header--dark text-left" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 16px;">
+                <h3 style="color: #fff; font-size: 1.2rem;">Job Preferences</h3>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Job Type</label>
+                    <select name="job_type" class="dk-select" style="width: 100%;">
+                        <option value="">---</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Freelance">Freelance</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Work Mode</label>
+                    <select name="work_mode" class="dk-select" style="width: 100%;">
+                        <option value="">---</option>
+                        <option value="Remote">Remote</option>
+                        <option value="On-site">On-site</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Expected Salary</label>
+                    <input type="text" name="expected_salary" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.expected_salary|default:'' }}">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Notice Period</label>
+                    <input type="text" name="notice_period" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. 30 days" value="{{ form_data.notice_period|default:'' }}">
+                </div>
+            </div>
+
+            <button type="submit" class="dk-btn-sm" style="width: 100%; justify-content: center; padding: 16px; margin-top: 16px; font-size: 1.1rem;">Submit Registration</button>
         </form>
 
         <div style="margin-top: 32px; text-align: center; display: flex; flex-direction: column; gap: 12px;">
             <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; margin: 0;">
-                Want to post jobs instead? <a href="{% url 'register_provider' %}"
-                    style="color: #a78bfa; text-decoration: none; font-weight: 600;">Register as Provider</a>
+                Want to post jobs instead? <a href="{% url 'register_provider' %}" style="color: #a78bfa; text-decoration: none; font-weight: 600;">Register as Provider</a>
             </p>
             <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; margin: 0;">
-                Already have an account? <a href="{% url 'login' %}"
-                    style="color: #a78bfa; text-decoration: none; font-weight: 600;">Sign in</a>
+                Already have an account? <a href="{% url 'login' %}" style="color: #a78bfa; text-decoration: none; font-weight: 600;">Sign in</a>
             </p>
         </div>
     </div>
 </div>
+
+<script>
+    // Simple helper to persist selects since Django doesn't do it automatically for raw HTML
+    document.addEventListener("DOMContentLoaded", function() {
+        const jt = "{{ form_data.job_type|default:'' }}";
+        if (jt) document.querySelector('select[name="job_type"]').value = jt;
+        
+        const wm = "{{ form_data.work_mode|default:'' }}";
+        if (wm) document.querySelector('select[name="work_mode"]').value = wm;
+    });
+</script>
 {% endblock %}

@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from .models import Profile
 from .decorators import seeker_required, provider_required
-from .forms import RegistrationForm
+from .forms import SeekerRegistrationForm, ProviderRegistrationForm
 from jobs.models import Job
 from applications.models import Application
 
@@ -34,16 +34,12 @@ def register_seeker(request):
         return _dashboard_redirect(request.user)
 
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form = SeekerRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    user = form.save(commit=False)
-                    user.set_password(form.cleaned_data["password"])
-                    user.save()
-                    profile = user.profile
-                    profile.role = "seeker"
-                    profile.save()
+                    user = form.save()
+                    form.save_profile(user)
                 login(request, user)
                 messages.success(request, "Account created successfully! Welcome to WorkBee.")
                 return redirect("seeker_dashboard")
@@ -62,16 +58,12 @@ def register_provider(request):
         return _dashboard_redirect(request.user)
 
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form = ProviderRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 with transaction.atomic():
-                    user = form.save(commit=False)
-                    user.set_password(form.cleaned_data["password"])
-                    user.save()
-                    profile = user.profile
-                    profile.role = "provider"
-                    profile.save()
+                    user = form.save()
+                    form.save_profile(user)
                 login(request, user)
                 messages.success(request, "Employer account created successfully!")
                 return redirect("provider_dashboard")
