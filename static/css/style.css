@@ -515,7 +515,7 @@ img {
     border-radius: var(--radius-xl);
     overflow: hidden;
     margin-bottom: 0;
-    background: #0c0a1a;
+    background: #1e293b;
 }
 
 /* --- Animated Background Blobs --- */
@@ -899,7 +899,7 @@ img {
 
 /* Dark Page Wrapper */
 .dark-page {
-    background: #0c0a1a;
+    background: #1e293b;
     border-radius: var(--radius-xl);
     padding: 0 0 64px;
     margin: -40px -24px 0;
@@ -909,6 +909,12 @@ img {
 
 .dark-page--inner {
     padding-top: 48px;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .section-header--dark h2 {
@@ -1027,8 +1033,8 @@ img {
 }
 
 .dk-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.08); /* More white element */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* More white element */
     border-radius: 16px;
     padding: 24px;
     transition: all 0.25s ease;
@@ -1036,9 +1042,9 @@ img {
 }
 
 .dk-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(139, 92, 246, 0.25);
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(139, 92, 246, 0.35);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
     transform: translateY(-2px);
 }
 
@@ -1286,7 +1292,7 @@ img {
     border-color: rgba(139, 92, 246, 0.2);
 }
 
-.dk-app-card-left {
+.dk-app-main {
     display: flex;
     align-items: flex-start;
     gap: 16px;
@@ -1294,26 +1300,38 @@ img {
     min-width: 0;
 }
 
-.dk-app-card-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
+.dk-app-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-top: 2px;
 }
 
-.dk-app-title {
-    font-size: 1.05rem;
+.dk-app-info h3 {
+    font-size: 1.15rem;
     font-weight: 700;
+    margin-bottom: 6px;
 }
 
-.dk-app-title a {
+.dk-app-info h3 a {
     color: #fff;
     text-decoration: none;
 }
 
-.dk-app-title a:hover {
+.dk-app-info h3 a:hover {
     color: #c4b5fd;
+}
+
+.dk-app-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.dk-app-meta span {
+    display: flex;
+    align-items: center;
 }
 
 .dk-app-status-dot {
