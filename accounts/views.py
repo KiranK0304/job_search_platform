@@ -111,8 +111,36 @@ def logout_view(request):
 # ─── Profile ──────────────────────────────────────────────────
 @login_required
 def profile_view(request):
-    """Show the logged-in user's profile."""
-    profile = Profile.objects.get(user=request.user)
+    """Show and edit the logged-in user's profile."""
+    profile = request.user.profile
+    
+    if request.method == "POST":
+        user = request.user
+        if 'first_name' in request.POST: user.first_name = request.POST['first_name']
+        if 'last_name' in request.POST: user.last_name = request.POST['last_name']
+        if 'email' in request.POST: user.email = request.POST['email']
+        user.save()
+
+        str_fields = [
+            'phone_number', 'current_job_title', 'years_of_experience', 'primary_skills', 
+            'seeker_industry', 'education', 'job_type', 'work_mode', 'expected_salary', 
+            'notice_period', 'company_name', 'company_industry', 'company_size', 
+            'company_location', 'company_website', 'company_description', 
+            'recruiter_designation', 'linkedin_profile'
+        ]
+        
+        for field in str_fields:
+            if field in request.POST:
+                setattr(profile, field, request.POST[field])
+
+        for file_field in ['profile_photo', 'resume', 'company_logo']:
+            if file_field in request.FILES:
+                setattr(profile, file_field, request.FILES[file_field])
+
+        profile.save()
+        messages.success(request, "Your profile has been successfully updated.")
+        return redirect('profile')
+
     return render(request, "accounts/profile.html", {"profile": profile})
 
 
