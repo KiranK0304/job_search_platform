@@ -217,7 +217,7 @@ c.login(username='bob', password='TestPass123!')
 job2 = Job.objects.get(title='React Developer')
 r = c.post(f'/jobs/{job2.id}/delete/', follow=True)
 check("Job deleted", r.status_code == 200)
-check("Job removed from DB", not Job.objects.filter(id=job2.id).exists())
+check("Job soft-deleted", not Job.objects.get(id=job2.id).is_active)
 
 # ═══════════════════════════════════════════════════
 print("\n🔹 16. CROSS-USER PROTECTION")

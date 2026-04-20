@@ -101,7 +101,8 @@ def job_delete(request, job_id):
         return redirect("job_list")
 
     if request.method == "POST":
-        job.delete()
+        job.is_active = False
+        job.save()
         next_url = request.POST.get("next", "")
         if next_url:
             return redirect(next_url)
