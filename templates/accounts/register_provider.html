@@ -23,12 +23,12 @@
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <label for="username" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Username / Company Name</label>
-                <input type="text" id="username" name="username" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="Choose a username" required>
+                <input type="text" id="username" name="username" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="Choose a username" value="{{ form_data.username|default:'' }}" required>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <label for="email" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Work Email</label>
-                <input type="email" id="email" name="email" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="hr@example.com" required>
+                <input type="email" id="email" name="email" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="hr@example.com" value="{{ form_data.email|default:'' }}" required>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">

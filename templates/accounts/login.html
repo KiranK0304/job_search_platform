@@ -23,7 +23,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <label for="username" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Username</label>
-                <input type="text" id="username" name="username" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="Enter your username" required>
+                <input type="text" id="username" name="username" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="Enter your username" value="{{ form_data.username|default:'' }}" required>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">

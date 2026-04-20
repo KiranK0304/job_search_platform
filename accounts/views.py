@@ -51,7 +51,7 @@ def register_seeker(request):
                 form.add_error("username", "A user with that username already exists.")
         
         error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
-        return render(request, "accounts/register_seeker.html", {"error": error})
+        return render(request, "accounts/register_seeker.html", {"error": error, "form_data": request.POST})
 
     return render(request, "accounts/register_seeker.html")
 
@@ -79,7 +79,7 @@ def register_provider(request):
                 form.add_error("username", "A user with that username already exists.")
         
         error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
-        return render(request, "accounts/register_provider.html", {"error": error})
+        return render(request, "accounts/register_provider.html", {"error": error, "form_data": request.POST})
 
     return render(request, "accounts/register_provider.html")
 
@@ -101,7 +101,8 @@ def login_view(request):
             return _dashboard_redirect(user)
         else:
             return render(request, "accounts/login.html", {
-                "error": "Invalid username or password."
+                "error": "Invalid username or password.",
+                "form_data": request.POST
             })
 
     return render(request, "accounts/login.html")
