@@ -7,7 +7,12 @@ from django.contrib import messages
 
 from .models import Profile
 from .decorators import seeker_required, provider_required
-from .forms import SeekerRegistrationForm, ProviderRegistrationForm
+from .forms import (
+    SeekerRegistrationForm,
+    ProviderRegistrationForm,
+    SeekerProfileUpdateForm,
+    ProviderProfileUpdateForm,
+)
 from jobs.models import Job
 from applications.models import Application
 
@@ -45,9 +50,14 @@ def register_seeker(request):
                 return redirect("seeker_dashboard")
             except IntegrityError:
                 form.add_error("username", "A user with that username already exists.")
-        
-        error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
-        return render(request, "accounts/register_seeker.html", {"error": error, "form_data": request.POST})
+
+        messages.error(request, "Please correct the highlighted registration errors.")
+        form_errors = [err for errors in form.errors.values() for err in errors]
+        return render(request, "accounts/register_seeker.html", {
+            "error": form_errors[0] if form_errors else "Registration failed.",
+            "form_errors": form_errors,
+            "form_data": request.POST,
+        })
 
     return render(request, "accounts/register_seeker.html")
 
@@ -69,9 +79,14 @@ def register_provider(request):
                 return redirect("provider_dashboard")
             except IntegrityError:
                 form.add_error("username", "A user with that username already exists.")
-        
-        error = list(form.errors.values())[0][0] if form.errors else "Registration failed."
-        return render(request, "accounts/register_provider.html", {"error": error, "form_data": request.POST})
+
+        messages.error(request, "Please correct the highlighted registration errors.")
+        form_errors = [err for errors in form.errors.values() for err in errors]
+        return render(request, "accounts/register_provider.html", {
+            "error": form_errors[0] if form_errors else "Registration failed.",
+            "form_errors": form_errors,
+            "form_data": request.POST,
+        })
 
     return render(request, "accounts/register_provider.html")
 
@@ -113,44 +128,40 @@ def logout_view(request):
 def profile_view(request):
     """Show and edit the logged-in user's profile."""
     profile = request.user.profile
-    
+
+    form_class = SeekerProfileUpdateForm if profile.role == Profile.Role.SEEKER else ProviderProfileUpdateForm
+    is_edit_mode = request.GET.get("edit") == "1" or request.method == "POST"
+
     if request.method == "POST":
-        user = request.user
-        if 'first_name' in request.POST: user.first_name = request.POST['first_name']
-        if 'last_name' in request.POST: user.last_name = request.POST['last_name']
-        if 'email' in request.POST: user.email = request.POST['email']
-        user.save()
+        form = form_class(request.POST, request.FILES, instance=profile, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been successfully updated.")
+            return redirect('profile')
 
-        str_fields = [
-            'phone_number', 'current_job_title', 'years_of_experience', 'primary_skills', 
-            'seeker_industry', 'education', 'job_type', 'work_mode', 'expected_salary', 
-            'notice_period', 'company_name', 'company_industry', 'company_size', 
-            'company_location', 'company_website', 'company_description', 
-            'recruiter_designation', 'linkedin_profile'
-        ]
-        
-        for field in str_fields:
-            if field in request.POST:
-                val = request.POST[field]
-                if field == 'years_of_experience':
-                    if not val.strip():  # blank string
-                        val = None
-                    else:
-                        try:
-                            val = int(val)
-                        except ValueError:
-                            val = None # Handle bad integer types defensively
-                setattr(profile, field, val)
+        messages.error(request, "Please fix the profile form errors.")
+    else:
+        form = form_class(instance=profile, user=request.user)
 
-        for file_field in ['profile_photo', 'resume', 'company_logo']:
-            if file_field in request.FILES:
-                setattr(profile, file_field, request.FILES[file_field])
+    profile_error_messages = []
+    if form.errors:
+        for field_name, field_errors in form.errors.items():
+            if field_name == "__all__":
+                label = "General"
+            else:
+                label = form.fields.get(field_name).label if form.fields.get(field_name) else field_name
+            for field_error in field_errors:
+                if field_name == "__all__":
+                    profile_error_messages.append(str(field_error))
+                else:
+                    profile_error_messages.append(f"{label}: {field_error}")
 
-        profile.save()
-        messages.success(request, "Your profile has been successfully updated.")
-        return redirect('profile')
-
-    return render(request, "accounts/profile.html", {"profile": profile})
+    return render(request, "accounts/profile.html", {
+        "profile": profile,
+        "form": form,
+        "is_edit_mode": is_edit_mode,
+        "profile_error_messages": profile_error_messages,
+    })
 
 
 # ─── Seeker Dashboard ─────────────────────────────────────────

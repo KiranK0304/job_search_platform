@@ -1,0 +1,63 @@
+.messages-wrap {
+    margin-bottom: 24px;
+}
+
+.card,
+.form-card,
+.dk-card {
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    box-shadow: 0 20px 35px -25px rgba(0, 0, 0, 0.8);
+}
+
+.dk-card:hover,
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.btn,
+.dk-btn-sm,
+.dk-btn-ghost,
+.hero-btn {
+    border-radius: 12px;
+}
+
+.dk-btn-sm,
+.hero-btn--primary,
+.btn-primary {
+    background: var(--grad-main);
+    color: var(--white);
+}
+
+.dk-btn-sm:hover,
+.hero-btn--primary:hover,
+.btn-primary:hover {
+    background: var(--grad-hover);
+}
+
+.dk-search-input,
+.dk-select,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    background: rgba(7, 15, 26, 0.65);
+    color: #e2e8f0;
+}
+
+.dk-search-input:focus,
+.dk-select:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.24);
+}
+
+.dk-badge,
+.badge {
+    letter-spacing: 0.02em;
+}
+
+.alert {
+    border-radius: 12px;
+}

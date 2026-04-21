@@ -18,12 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, { threshold: 0.15 });
 
-        animatedEls.forEach(el => {
+        animatedEls.forEach((el, index) => {
             // Set initial hidden state via JS so content is still
             // visible if JS is disabled
             el.style.opacity = '0';
             el.style.transform = 'translateY(24px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+            el.style.transitionDelay = `${Math.min(index * 60, 300)}ms`;
             observer.observe(el);
         });
     }
@@ -44,6 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
             link.classList.add('active');
         }
     });
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        const onScroll = () => {
+            navbar.classList.toggle('navbar-scrolled', window.scrollY > 10);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+    }
 
     console.log('🐝 WorkBee loaded');
 });

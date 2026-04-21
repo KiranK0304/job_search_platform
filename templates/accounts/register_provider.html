@@ -18,6 +18,17 @@
             </div>
         {% endif %}
 
+        {% if form_errors %}
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; font-size: 0.9rem;">
+            <strong>Please fix these issues:</strong>
+            <ul style="margin: 8px 0 0 18px;">
+                {% for field_error in form_errors %}
+                <li>{{ field_error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         <form method="post" action="{% url 'register_provider' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
             {% csrf_token %}
 
@@ -53,9 +64,14 @@
                     <input type="password" name="password" class="dk-search-input" style="width: 100%; border-radius: 10px;" required>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Phone Number</label>
-                    <input type="text" name="phone_number" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.phone_number|default:'' }}">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Confirm Password</label>
+                    <input type="password" name="confirm_password" class="dk-search-input" style="width: 100%; border-radius: 10px;" required>
                 </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Phone Number</label>
+                    <input type="tel" name="phone_number" inputmode="numeric" pattern="[0-9]{7,15}" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="{{ form_data.phone_number|default:'' }}">
             </div>
 
             <div class="section-header--dark text-left" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 16px;">
@@ -102,6 +118,11 @@
             <div style="display: flex; flex-direction: column; gap: 8px;">
                 <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Description</label>
                 <textarea name="company_description" class="dk-search-input" style="width: 100%; border-radius: 10px; resize: vertical; min-height: 80px;" placeholder="Tell us about the company...">{{ form_data.company_description|default:'' }}</textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Additional Notes (Optional)</label>
+                <textarea name="bio" class="dk-search-input" style="width: 100%; border-radius: 10px; resize: vertical; min-height: 80px;" placeholder="Anything else you want candidates to know...">{{ form_data.bio|default:'' }}</textarea>
             </div>
 
             <div class="section-header--dark text-left" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 16px;">

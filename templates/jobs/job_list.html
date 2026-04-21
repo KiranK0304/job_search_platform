@@ -33,13 +33,13 @@
                 </select>
             </form>
             {% if user.is_authenticated and user.profile.role == "provider" %}
-                <a href="{% url 'job_create' %}" class="hero-btn hero-btn--primary" style="padding: 10px 20px; font-size: 0.85rem;">+ Post Job</a>
+                <a href="{% url 'job_create' %}" class="hero-btn hero-btn--primary dk-post-job-btn">+ Post Job</a>
             {% endif %}
         </div>
     </div>
 
     {% if search_query %}
-    <p class="dk-search-info">Showing results for "<strong>{{ search_query }}</strong>" — <a href="{% url 'job_list' %}" style="color: #c4b5fd;">Clear</a></p>
+    <p class="dk-search-info">Showing results for "<strong>{{ search_query }}</strong>" — <a href="{% url 'job_list' %}" class="dk-clear-link">Clear</a></p>
     {% endif %}
 
     <!-- Job cards -->
@@ -51,7 +51,7 @@
                 <div class="dk-card-top">
                     <div class="dk-card-icon">💼</div>
                     {% if user.is_authenticated and user.profile.role == "seeker" %}
-                    <form method="post" action="{% url 'save_job' job.id %}" style="margin:0;">
+                    <form method="post" action="{% url 'save_job' job.id %}" class="inline-form">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'job_list' %}{% if request.GET.sort %}?sort={{ request.GET.sort }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">
                         <button type="submit" class="dk-save-btn {% if job.id in saved_set %}dk-save-btn--active{% endif %}" title="{% if job.id in saved_set %}Unsave{% else %}Save{% endif %}">
@@ -77,13 +77,13 @@
                             {% with app_id=applied_map|get_item:job.id %}
                                 {% if app_id %}
                                     <span class="dk-badge dk-badge--green">✓ Applied</span>
-                                    <form method="post" action="{% url 'withdraw_application' app_id %}" style="margin:0;">
+                                    <form method="post" action="{% url 'withdraw_application' app_id %}" class="inline-form">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{% url 'job_list' %}">
                                         <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Withdraw?')">✕ Withdraw</button>
                                     </form>
                                 {% else %}
-                                    <form method="post" action="{% url 'apply_to_job' job.id %}" style="margin:0;">
+                                    <form method="post" action="{% url 'apply_to_job' job.id %}" class="inline-form">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{% url 'job_list' %}">
                                         <button type="submit" class="dk-btn-sm">Apply Now</button>
@@ -92,7 +92,7 @@
                             {% endwith %}
                         {% elif user.profile.role == "provider" and user == job.created_by %}
                             <a href="{% url 'job_applications' job.id %}" class="dk-btn-ghost">👥 Applicants</a>
-                            <form method="post" action="{% url 'job_delete' job.id %}" style="margin:0;">
+                            <form method="post" action="{% url 'job_delete' job.id %}" class="inline-form">
                                 {% csrf_token %}
                                 <input type="hidden" name="next" value="{% url 'job_list' %}">
                                 <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" onclick="return confirm('Delete this job?')">🗑 Delete</button>

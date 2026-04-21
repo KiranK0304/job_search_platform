@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+
+:root {
+    --primary: #8b5cf6;
+    --secondary: #ec4899;
+    --accent: #3b82f6;
+    --blue: #6366f1;
+    --blue-light: #a78bfa;
+    --blue-dark: #4f46e5;
+    --blue-50: #eef2ff;
+    --blue-100: #e0e7ff;
+    --grey-900: #0f172a;
+    --grey-800: #1e293b;
+    --grey-700: #334155;
+    --grey-600: #475569;
+    --grey-500: #64748b;
+    --grey-400: #94a3b8;
+    --grey-300: #cbd5e1;
+    --grey-200: #e2e8f0;
+    --grey-100: #f1f5f9;
+    --grey-50: #f8fafc;
+    --white: #ffffff;
+    --grad-main: linear-gradient(130deg, #8b5cf6 0%, #3b82f6 55%, #ec4899 100%);
+    --grad-hover: linear-gradient(130deg, #7c3aed 0%, #2563eb 55%, #db2777 100%);
+    --grad-light: linear-gradient(130deg, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.12) 60%, rgba(236, 72, 153, 0.16) 100%);
+}
+
+body {
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    background:
+    radial-gradient(circle at 10% 5%, rgba(139, 92, 246, 0.24), transparent 35%),
+    radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.2), transparent 38%),
+        linear-gradient(180deg, #060f19 0%, #0b1624 40%, #0f172a 100%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.navbar-brand,
+.dk-title,
+.hero-heading {
+    font-family: "Sora", "Manrope", sans-serif;
+}
