@@ -4,6 +4,7 @@ from accounts.models import Profile
 from jobs.models import Job
 from applications.models import Application
 from django.db import transaction
+import random
 
 class Command(BaseCommand):
     help = 'Populates the database with test seekers, providers, jobs, and applications'
@@ -40,6 +41,8 @@ class Command(BaseCommand):
                 user.save()
                 profile = user.profile
                 profile.role = "provider"
+                profile.company_name = u.capitalize() + " Corp"
+                profile.phone_number = f"1-800-555-{random.randint(1000, 9999)}"
                 profile.save()
                 providers.append(user)
 
@@ -50,6 +53,9 @@ class Command(BaseCommand):
                 user.save()
                 profile = user.profile
                 profile.role = "seeker"
+                profile.current_job_title = random.choice(["Software Engineer", "Data Analyst", "UX Designer", "Product Manager", "DevOps Engineer"])
+                profile.years_of_experience = random.randint(1, 15)
+                profile.phone_number = f"555-{random.randint(100, 999)}-{random.randint(1000, 9999)}"
                 profile.save()
                 seekers.append(user)
 

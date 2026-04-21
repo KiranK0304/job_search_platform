@@ -131,7 +131,16 @@ def profile_view(request):
         
         for field in str_fields:
             if field in request.POST:
-                setattr(profile, field, request.POST[field])
+                val = request.POST[field]
+                if field == 'years_of_experience':
+                    if not val.strip():  # blank string
+                        val = None
+                    else:
+                        try:
+                            val = int(val)
+                        except ValueError:
+                            val = None # Handle bad integer types defensively
+                setattr(profile, field, val)
 
         for file_field in ['profile_photo', 'resume', 'company_logo']:
             if file_field in request.FILES:
