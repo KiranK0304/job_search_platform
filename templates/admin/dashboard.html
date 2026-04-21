@@ -1,0 +1,61 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div style="margin-bottom: 16px;">
+  <h1 style="margin-bottom: 6px;">Dashboard Overview</h1>
+  <p style="margin-top: 0; color: #555;">Operational insights for WorkBee administrators.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px;">
+  <div class="module" style="padding: 12px;">
+    <h3>Total Job Seekers</h3>
+    <p style="font-size: 24px; margin: 8px 0;">{{ total_seekers }}</p>
+  </div>
+  <div class="module" style="padding: 12px;">
+    <h3>Total Job Providers</h3>
+    <p style="font-size: 24px; margin: 8px 0;">{{ total_providers }}</p>
+  </div>
+  <div class="module" style="padding: 12px;">
+    <h3>Applications Submitted</h3>
+    <p style="font-size: 24px; margin: 8px 0;">{{ total_applications }}</p>
+  </div>
+  <div class="module" style="padding: 12px;">
+    <h3>Open Reports</h3>
+    <p style="font-size: 24px; margin: 8px 0;">{{ open_reports }}</p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px;">
+  <div class="module" style="padding: 12px;">
+    <h3>Jobs Posted</h3>
+    <ul style="padding-left: 18px; margin: 8px 0;">
+      <li>Active: {{ jobs_active }}</li>
+      <li>Expired: {{ jobs_expired }}</li>
+      <li>Closed: {{ jobs_closed }}</li>
+    </ul>
+  </div>
+  <div class="module" style="padding: 12px;">
+    <h3>New Registrations</h3>
+    <ul style="padding-left: 18px; margin: 8px 0;">
+      <li>Daily: {{ new_users_daily }}</li>
+      <li>Weekly: {{ new_users_weekly }}</li>
+      <li>Monthly: {{ new_users_monthly }}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="module" style="padding: 12px;">
+  <h2 style="margin-top: 0;">Recent Activity Feed</h2>
+  {% if recent_activity %}
+    <ul style="padding-left: 18px;">
+      {% for item in recent_activity %}
+      <li>
+        <strong>{{ item.time|date:"Y-m-d H:i" }}</strong> - {{ item.label }}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No recent activity available.</p>
+  {% endif %}
+</div>
+{% endblock %}

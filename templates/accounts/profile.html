@@ -1,305 +1,41 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}My Profile — WorkBee{% endblock %}
 
 {% block content %}
-<style>
-    .profile-readonly .dk-search-input, .profile-readonly .dk-select {
-        background: transparent !important;
-        border-color: transparent !important;
-        pointer-events: none;
-        -webkit-appearance: none;
-        appearance: none;
-        padding-left: 0;
-        color: #fff;
-        font-weight: 500;
-    }
-    .profile-readonly .edit-only {
-        display: none !important;
-    }
-    .profile-editable .view-only {
-        display: none !important;
-    }
-</style>
 <div class="dark-page dark-page--inner">
     <div class="dk-page-header">
         <div>
             <h1 class="dk-title">My Profile</h1>
-            <p class="dk-subtitle">Your personal account information & preferences</p>
-        </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-            <a href="{% url 'logout' %}" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 10px 20px;">Logout</a>
+            <p class="dk-subtitle">Your account information</p>
         </div>
     </div>
 
-    <!-- Edit Profile Form -->
-    <div style="display: flex; justify-content: center; width: 100%;">
-        <div class="dk-card" style="width: 100%; max-width: 800px; padding: 24px 32px;">
-            <form id="profile-form" class="profile-readonly" method="post" action="{% url 'profile' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 10px;">
-                {% csrf_token %}
+    <div style="display: flex; justify-content: center;">
+        <div class="dk-card" style="max-width: 480px; width: 100%; text-align: center; padding: 40px 32px;">
+            <!-- Avatar -->
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 20px;">
+                {{ profile.user.username|slice:":1"|upper }}
+            </div>
 
-                <!-- Avatar Section -->
-                <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fff; overflow: hidden; position: relative;">
-                        <!-- Check which photo to display based on role -->
-                        {% if profile.role == 'seeker' and profile.profile_photo %}
-                            <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover;">
-                        {% elif profile.role == 'provider' and profile.company_logo %}
-                            <img src="{{ profile.company_logo.url }}" alt="Company Logo" style="width: 100%; height: 100%; object-fit: cover; background: white;">
-                        {% else %}
-                            {{ profile.user.username|slice:":1"|upper }}
-                        {% endif %}
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
-                        <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin: 0;">{{ profile.user.first_name|default:profile.user.username }}</h2>
-                        <span class="dk-badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); display: inline-block; width: max-content; padding: 4px 10px;">{{ profile.role|upper }}</span>
-                        <!-- Custom Photo Upload for the specific role -->
-                        <div class="edit-only" style="margin-top: 8px;">
-                            {% if profile.role == 'seeker' %}
-                                <label style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Change Profile Photo</label>
-                                <input type="file" name="profile_photo" class="edit-only" style="display:block; font-size: 0.85rem; color: #fff;">
-                            {% elif profile.role == 'provider' %}
-                                <label style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Change Company Logo</label>
-                                <input type="file" name="company_logo" class="edit-only" style="display:block; font-size: 0.85rem; color: #fff;">
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="color: rgba(255,255,255,0.4); font-size: 0.85rem; display: block;">Joined</span>
-                        <span style="color: #fff; font-size: 0.95rem;">{{ profile.user.date_joined|date:"M j, Y" }}</span>
-                    </div>
+            <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 4px;">{{ profile.user.username }}</h2>
+            <span class="dk-badge" style="background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); margin-bottom: 24px; display: inline-block;">{{ profile.role|upper }}</span>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);">
+                    <span style="color: rgba(255,255,255,0.4); font-size: 0.88rem; font-weight: 600;">Email</span>
+                    <span style="color: #fff; font-size: 0.88rem;">{{ profile.user.email }}</span>
                 </div>
-
-                <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
-                    <div class="section-header--dark text-left" style="margin-bottom: 16px;">
-                        <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">⚙️ Account Configuration</h3>
-                    </div>
-
-                    <!-- Core Details (Shared) -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">First Name</label>
-                            <input type="text" name="first_name" class="dk-search-input" value="{{ profile.user.first_name }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Last Name</label>
-                            <input type="text" name="last_name" class="dk-search-input" value="{{ profile.user.last_name }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Email Address</label>
-                            <input type="email" name="email" class="dk-search-input" value="{{ profile.user.email }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Phone Number</label>
-                            <input type="text" name="phone_number" class="dk-search-input" value="{{ profile.phone_number }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
+                <div style="display: flex; justify-content: space-between; padding: 12px 16px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);">
+                    <span style="color: rgba(255,255,255,0.4); font-size: 0.88rem; font-weight: 600;">Joined</span>
+                    <span style="color: #fff; font-size: 0.88rem;">{{ profile.user.date_joined|date:"M j, Y" }}</span>
                 </div>
+            </div>
 
-                {% if profile.role == 'seeker' %}
-                <!-- SEEKER SPECIFIC -->
-                <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
-                    <div class="section-header--dark text-left" style="margin-bottom: 16px;">
-                        <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">💼 Professional Details</h3>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Current Job Title</label>
-                            <input type="text" name="current_job_title" class="dk-search-input" value="{{ profile.current_job_title }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Years of Experience</label>
-                            <input type="number" name="years_of_experience" class="dk-search-input" value="{{ profile.years_of_experience|default:'' }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
-                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Primary Skills</label>
-                        <input type="text" name="primary_skills" class="dk-search-input" value="{{ profile.primary_skills }}" style="width: 100%; border-radius: 10px;">
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Industry</label>
-                            <input type="text" name="seeker_industry" class="dk-search-input" value="{{ profile.seeker_industry }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Highest Education</label>
-                            <input type="text" name="education" class="dk-search-input" value="{{ profile.education }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Resume / CV</label>
-                        {% if profile.resume %}
-                            <div style="margin-bottom: 8px;">
-                                <a href="{{ profile.resume.url }}" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600;">📄 View Current Resume</a>
-                            </div>
-                        {% endif %}
-                        <input type="file" name="resume" class="dk-search-input edit-only" style="width: 100%; border-radius: 10px; padding: 6px;">
-                        <small class="edit-only" style="color: rgba(255,255,255,0.4);">Uploading a new file will replace your current resume.</small>
-                    </div>
-                </div>
-
-                <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
-                    <div class="section-header--dark text-left" style="margin-bottom: 16px;">
-                        <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">🎯 Job Preferences</h3>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Job Type</label>
-                            <select name="job_type" class="dk-select" id="job_type_select" style="width: 100%;">
-                                <option value="">---</option>
-                                <option value="Full-time">Full-time</option>
-                                <option value="Part-time">Part-time</option>
-                                <option value="Freelance">Freelance</option>
-                                <option value="Internship">Internship</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Work Mode</label>
-                            <select name="work_mode" class="dk-select" id="work_mode_select" style="width: 100%;">
-                                <option value="">---</option>
-                                <option value="Remote">Remote</option>
-                                <option value="On-site">On-site</option>
-                                <option value="Hybrid">Hybrid</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Expected Salary</label>
-                            <input type="text" name="expected_salary" class="dk-search-input" value="{{ profile.expected_salary }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Notice Period</label>
-                            <input type="text" name="notice_period" class="dk-search-input" value="{{ profile.notice_period }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-                </div>
-
-                {% elif profile.role == 'provider' %}
-                <!-- PROVIDER SPECIFIC -->
-                <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
-                    <div class="section-header--dark text-left" style="margin-bottom: 16px;">
-                        <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">🏢 Company Details</h3>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
-                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Name</label>
-                        <input type="text" name="company_name" class="dk-search-input" value="{{ profile.company_name }}" style="width: 100%; border-radius: 10px;">
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Industry / Sector</label>
-                            <input type="text" name="company_industry" class="dk-search-input" value="{{ profile.company_industry }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Size</label>
-                            <select name="company_size" class="dk-select" id="company_size_select" style="width: 100%;">
-                                <option value="">---</option>
-                                <option value="1-10">1-10 Employees</option>
-                                <option value="11-50">11-50 Employees</option>
-                                <option value="51-200">51-200 Employees</option>
-                                <option value="200+">200+ Employees</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">HQ Location</label>
-                            <input type="text" name="company_location" class="dk-search-input" value="{{ profile.company_location }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Website URL</label>
-                            <input type="url" name="company_website" class="dk-search-input" value="{{ profile.company_website }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Description</label>
-                        <textarea name="company_description" class="dk-search-input" style="width: 100%; border-radius: 10px; min-height: 100px;">{{ profile.company_description }}</textarea>
-                    </div>
-                </div>
-
-                <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
-                    <div class="section-header--dark text-left" style="margin-bottom: 16px;">
-                        <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">👤 Recruiter Details</h3>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Your Designation</label>
-                            <input type="text" name="recruiter_designation" class="dk-search-input" value="{{ profile.recruiter_designation }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">LinkedIn Profile</label>
-                            <input type="url" name="linkedin_profile" class="dk-search-input" value="{{ profile.linkedin_profile }}" style="width: 100%; border-radius: 10px;">
-                        </div>
-                    </div>
-                </div>
-
-                {% endif %}
-
-                <div style="margin-top: 24px; text-align: right; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-                    <button type="button" id="edit-btn" class="view-only dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Edit Profile</button>
-                    
-                    <div class="edit-only" style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button type="button" id="cancel-btn" class="dk-btn-ghost" style="padding: 14px 32px; font-size: 1.05rem; color: #fff; background: rgba(255,255,255,0.05);">Cancel</button>
-                        <button type="submit" class="dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Save Changes</button>
-                    </div>
-                </div>
-
-            </form>
+            <div style="margin-top: 28px;">
+                <a href="{% url 'logout' %}" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 10px 24px;">Logout</a>
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Persist select dropdown values
-    document.addEventListener("DOMContentLoaded", function() {
-        const jt = "{{ profile.job_type|default:'' }}";
-        if (jt && document.getElementById('job_type_select')) {
-            document.getElementById('job_type_select').value = jt;
-        }
-        
-        const wm = "{{ profile.work_mode|default:'' }}";
-        if (wm && document.getElementById('work_mode_select')) {
-            document.getElementById('work_mode_select').value = wm;
-        }
-
-        const cs = "{{ profile.company_size|default:'' }}";
-        if (cs && document.getElementById('company_size_select')) {
-            document.getElementById('company_size_select').value = cs;
-        }
-
-        const form = document.getElementById('profile-form');
-        const editBtn = document.getElementById('edit-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-
-        if (editBtn && cancelBtn) {
-            editBtn.addEventListener('click', () => {
-                form.classList.remove('profile-readonly');
-                form.classList.add('profile-editable');
-            });
-
-            cancelBtn.addEventListener('click', () => {
-                form.classList.add('profile-readonly');
-                form.classList.remove('profile-editable');
-                // Reset form values to original state
-                form.reset();
-            });
-        }
-    });
-</script>
 {% endblock %}

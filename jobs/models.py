@@ -2,6 +2,55 @@ from django.db import models
 from django.conf import settings
 
 
+class JobCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name_plural = "Job categories"
+
+    def __str__(self):
+        return self.name
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class IndustryType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class EducationQualification(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class Job(models.Model):
     """
     Represents a job listing created by a provider.
@@ -35,10 +84,36 @@ class Job(models.Model):
         PER_MONTH = 'Per Month', 'Per Month'
         PER_YEAR = 'Per Year', 'Per Year'
 
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        ACTIVE = "active", "Active"
+        EXPIRED = "expired", "Expired"
+        CLOSED = "closed", "Closed"
+
+    class ModerationStatus(models.TextChoices):
+        PENDING = "pending", "Pending"
+        APPROVED = "approved", "Approved"
+        REJECTED = "rejected", "Rejected"
+
     title = models.CharField(max_length=200)
     description = models.TextField()
 
+    category = models.ForeignKey(
+        JobCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="jobs",
+    )
+
     industry = models.CharField(max_length=100, default='Not Specified')
+    industry_type = models.ForeignKey(
+        IndustryType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="jobs",
+    )
     department = models.CharField(max_length=100, blank=True, null=True)
 
     job_type = models.CharField(max_length=50, choices=JobType.choices, default=JobType.FULL_TIME)
@@ -47,7 +122,15 @@ class Job(models.Model):
     vacancies = models.IntegerField(default=1)
 
     required_skills = models.CharField(max_length=255, default='Not Specified')
+    skills = models.ManyToManyField(Skill, blank=True, related_name="jobs")
     education = models.CharField(max_length=100, default='Not Specified')
+    education_qualification = models.ForeignKey(
+        EducationQualification,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="jobs",
+    )
     experience_level = models.CharField(max_length=50, choices=ExperienceLevel.choices, default=ExperienceLevel.ENTRY)
     years_of_experience = models.CharField(max_length=50, default='Not Specified')
     preferred_languages = models.CharField(max_length=100, blank=True, null=True)
@@ -64,6 +147,22 @@ class Job(models.Model):
     )
 
     is_active = models.BooleanField(default=True)
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+    )
+    moderation_status = models.CharField(
+        max_length=10,
+        choices=ModerationStatus.choices,
+        default=ModerationStatus.APPROVED,
+    )
+    is_featured = models.BooleanField(default=False)
+    is_urgent = models.BooleanField(default=False)
+    is_flagged = models.BooleanField(default=False)
+    flag_reason = models.TextField(blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

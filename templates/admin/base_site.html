@@ -5,6 +5,9 @@
 
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">🐝 WorkBee Admin</a></h1>
+<div style="padding: 6px 0 0 2px;">
+	<a href="{% url 'admin:workbee_dashboard' %}">Open Dashboard Overview</a>
+</div>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}

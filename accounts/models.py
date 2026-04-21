@@ -2,6 +2,16 @@ from django.db import models
 from django.conf import settings
 
 
+class SeekerProfileManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(role=Profile.Role.SEEKER)
+
+
+class ProviderProfileManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(role=Profile.Role.PROVIDER)
+
+
 class Profile(models.Model):
     """
     Extends Django's built-in User model with marketplace-specific data.
@@ -52,6 +62,12 @@ class Profile(models.Model):
     recruiter_designation = models.CharField(max_length=100, blank=True)
     linkedin_profile = models.URLField(blank=True)
 
+    # moderation / trust
+    is_verified = models.BooleanField(default=False)
+    is_flagged = models.BooleanField(default=False)
+    flag_reason = models.TextField(blank=True)
+    flagged_at = models.DateTimeField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -59,6 +75,28 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
+
+class SeekerProfile(Profile):
+    """Proxy model for seeker-only admin operations."""
+
+    objects = SeekerProfileManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Job Seeker"
+        verbose_name_plural = "Job Seekers"
+
+
+class ProviderProfile(Profile):
+    """Proxy model for provider-only admin operations."""
+
+    objects = ProviderProfileManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Job Provider"
+        verbose_name_plural = "Job Providers"
 
 
 from django.db.models.signals import post_save
