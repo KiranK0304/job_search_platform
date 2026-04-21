@@ -80,12 +80,45 @@ def job_create(request):
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
+        industry = request.POST.get("industry", "Not Specified")
+        department = request.POST.get("department", "")
+        job_type = request.POST.get("job_type", "Full-time")
+        work_mode = request.POST.get("work_mode", "On-site")
         location = request.POST.get("location", "")
+        
+        try:
+            vacancies = int(request.POST.get("vacancies", 1))
+        except ValueError:
+            vacancies = 1
+
+        required_skills = request.POST.get("required_skills", "Not Specified")
+        education = request.POST.get("education", "Not Specified")
+        experience_level = request.POST.get("experience_level", "Entry Level")
+        years_of_experience = request.POST.get("years_of_experience", "Not Specified")
+        preferred_languages = request.POST.get("preferred_languages", "")
+        certifications = request.POST.get("certifications", "")
+        salary_type = request.POST.get("salary_type", "Negotiable")
+        salary_range = request.POST.get("salary_range", "")
+        salary_period = request.POST.get("salary_period", "Per Month")
 
         job = Job.objects.create(
             title=title,
             description=description,
+            industry=industry,
+            department=department,
+            job_type=job_type,
+            work_mode=work_mode,
             location=location,
+            vacancies=vacancies,
+            required_skills=required_skills,
+            education=education,
+            experience_level=experience_level,
+            years_of_experience=years_of_experience,
+            preferred_languages=preferred_languages,
+            certifications=certifications,
+            salary_type=salary_type,
+            salary_range=salary_range,
+            salary_period=salary_period,
             created_by=request.user,
         )
         messages.success(request, "Job created successfully!")

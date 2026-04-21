@@ -17,19 +17,142 @@
         <form method="post" action="{% url 'job_create' %}" style="display: flex; flex-direction: column; gap: 24px;">
             {% csrf_token %}
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="title" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Job Title</label>
-                <input type="text" id="title" name="title" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Software Developer" required>
+            <!-- Basic Job Information -->
+            <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+                <div class="section-header--dark text-left" style="margin-bottom: 16px;">
+                    <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">📋 Basic Job Information</h3>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                    <label for="title" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Job Title</label>
+                    <input type="text" id="title" name="title" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Senior Software Engineer" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Job Category / Industry</label>
+                        <input type="text" name="industry" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Technology" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Department (Optional)</label>
+                        <input type="text" name="department" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Backend Engineering">
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label for="description" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Job Description</label>
+                    <textarea id="description" name="description" class="dk-search-input" style="width: 100%; border-radius: 10px; min-height: 140px; font-family: inherit; resize: vertical;" placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
+                </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="location" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Location</label>
-                <input type="text" id="location" name="location" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Mumbai, Remote">
+            <!-- Job Details -->
+            <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+                <div class="section-header--dark text-left" style="margin-bottom: 16px;">
+                    <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">💼 Job Details</h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Job Type</label>
+                        <select name="job_type" class="dk-select" style="width: 100%;">
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Work Mode</label>
+                        <select name="work_mode" class="dk-select" style="width: 100%;">
+                            <option value="On-site">On-site</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Openings</label>
+                        <input type="number" name="vacancies" class="dk-search-input" style="width: 100%; border-radius: 10px;" value="1" min="1" required>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Job Location</label>
+                    <input type="text" name="location" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. New York, NY (Leave blank if fully Remote)">
+                </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label for="description" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; font-weight: 600;">Job Description</label>
-                <textarea id="description" name="description" class="dk-search-input" style="width: 100%; border-radius: 10px; min-height: 180px; font-family: inherit; resize: vertical;" placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
+            <!-- Requirements -->
+            <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+                <div class="section-header--dark text-left" style="margin-bottom: 16px;">
+                    <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">🎯 Requirements</h3>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                    <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Required Skills</label>
+                    <input type="text" name="required_skills" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Python, SQL, AWS" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Minimum Education</label>
+                        <input type="text" name="education" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. Bachelor's Degree" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Experience Level</label>
+                        <select name="experience_level" class="dk-select" style="width: 100%;">
+                            <option value="Entry Level">Entry Level</option>
+                            <option value="Mid Level">Mid Level</option>
+                            <option value="Senior Level">Senior Level</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Years of Exp.</label>
+                        <input type="text" name="years_of_experience" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. 5-10" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Preferred Languages</label>
+                        <input type="text" name="preferred_languages" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. English, Spanish (Optional)">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Certifications</label>
+                        <input type="text" name="certifications" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="(Optional)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compensation & Benefits -->
+            <div class="section-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+                <div class="section-header--dark text-left" style="margin-bottom: 16px;">
+                    <h3 style="color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">💰 Compensation & Benefits</h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Salary Type</label>
+                        <select name="salary_type" class="dk-select" style="width: 100%;">
+                            <option value="Negotiable">Negotiable</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Range">Range</option>
+                            <option value="Unpaid">Unpaid</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Salary Range/Amt</label>
+                        <input type="text" name="salary_range" class="dk-search-input" style="width: 100%; border-radius: 10px;" placeholder="e.g. $80k - $120k">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Salary Period</label>
+                        <select name="salary_period" class="dk-select" style="width: 100%;">
+                            <option value="Per Month">Per Month</option>
+                            <option value="Per Year">Per Year</option>
+                            <option value="Per Hour">Per Hour</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div style="display: flex; gap: 16px; margin-top: 16px;">

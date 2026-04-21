@@ -7,10 +7,55 @@ class Job(models.Model):
     Represents a job listing created by a provider.
     """
 
+    class JobType(models.TextChoices):
+        FULL_TIME = 'Full-time', 'Full-time'
+        PART_TIME = 'Part-time', 'Part-time'
+        CONTRACT = 'Contract', 'Contract'
+        FREELANCE = 'Freelance', 'Freelance'
+        INTERNSHIP = 'Internship', 'Internship'
+
+    class WorkMode(models.TextChoices):
+        ON_SITE = 'On-site', 'On-site'
+        REMOTE = 'Remote', 'Remote'
+        HYBRID = 'Hybrid', 'Hybrid'
+
+    class ExperienceLevel(models.TextChoices):
+        ENTRY = 'Entry Level', 'Entry Level'
+        MID = 'Mid Level', 'Mid Level'
+        SENIOR = 'Senior Level', 'Senior Level'
+
+    class SalaryType(models.TextChoices):
+        FIXED = 'Fixed', 'Fixed'
+        RANGE = 'Range', 'Range'
+        NEGOTIABLE = 'Negotiable', 'Negotiable'
+        UNPAID = 'Unpaid', 'Unpaid'
+
+    class SalaryPeriod(models.TextChoices):
+        PER_HOUR = 'Per Hour', 'Per Hour'
+        PER_MONTH = 'Per Month', 'Per Month'
+        PER_YEAR = 'Per Year', 'Per Year'
+
     title = models.CharField(max_length=200)
     description = models.TextField()
 
+    industry = models.CharField(max_length=100, default='Not Specified')
+    department = models.CharField(max_length=100, blank=True, null=True)
+
+    job_type = models.CharField(max_length=50, choices=JobType.choices, default=JobType.FULL_TIME)
+    work_mode = models.CharField(max_length=50, choices=WorkMode.choices, default=WorkMode.ON_SITE)
     location = models.CharField(max_length=100, blank=True)
+    vacancies = models.IntegerField(default=1)
+
+    required_skills = models.CharField(max_length=255, default='Not Specified')
+    education = models.CharField(max_length=100, default='Not Specified')
+    experience_level = models.CharField(max_length=50, choices=ExperienceLevel.choices, default=ExperienceLevel.ENTRY)
+    years_of_experience = models.CharField(max_length=50, default='Not Specified')
+    preferred_languages = models.CharField(max_length=100, blank=True, null=True)
+    certifications = models.CharField(max_length=100, blank=True, null=True)
+
+    salary_type = models.CharField(max_length=50, choices=SalaryType.choices, default=SalaryType.NEGOTIABLE)
+    salary_range = models.CharField(max_length=100, blank=True, null=True)
+    salary_period = models.CharField(max_length=50, choices=SalaryPeriod.choices, default=SalaryPeriod.PER_MONTH)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
