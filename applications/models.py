@@ -25,6 +25,7 @@ class Application(models.Model):
     )
 
     cover_letter = models.TextField(blank=True)
+    feedback = models.TextField(blank=True)
 
     status = models.CharField(
         max_length=10,

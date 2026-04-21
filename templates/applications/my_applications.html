@@ -46,6 +46,13 @@
                         {% if app.cover_letter %}
                         <p class="dk-card-desc" style="margin-top: 8px;">{{ app.cover_letter|truncatewords:20 }}</p>
                         {% endif %}
+                        
+                        {% if app.status == 'rejected' and app.feedback %}
+                        <div style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px; margin-top: 12px; border-radius: 4px;">
+                            <span style="color: #ef4444; font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 4px;">Employer Feedback</span>
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; margin: 0; font-style: italic;">"{{ app.feedback }}"</p>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
 

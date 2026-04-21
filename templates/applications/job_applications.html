@@ -34,22 +34,38 @@
                                     <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; margin: 0; font-style: italic;">"{{ app.cover_letter }}"</p>
                                 </div>
                             {% endif %}
+                            
+                            {% if app.status == 'accepted' %}
+                                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 12px; margin-top: 16px; border-radius: 8px;">
+                                    <span style="color: #4ade80; font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 4px;">✅ Candidate Accepted - Contact Details:</span>
+                                    <span style="color: #fff; font-size: 0.95rem;">📞 Phone: {{ app.applicant.profile.phone_number|default:"No direct phone provided" }}</span>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                     
                     <div class="dk-app-status" style="flex-direction: column; gap: 12px; align-items: flex-end;">
                         {% if app.status == 'pending' %}
                             <div style="display: flex; gap: 8px;">
+                            <div id="action-buttons-{{ app.id }}" style="display: flex; gap: 8px; padding-bottom: 16px;">
                                 <form method="post" action="{% url 'update_application_status' app.id %}" style="margin: 0;">
                                     {% csrf_token %}
                                     <input type="hidden" name="status" value="accepted">
-                                    <button type="submit" class="dk-btn-sm" style="background: linear-gradient(135deg, #10b981, #059669); padding: 8px 16px;">Accept</button>
+                                    <button type="submit" class="dk-btn-sm" style="background: linear-gradient(135deg, #10b981, #059669); padding: 8px 16px; height: max-content;">Accept</button>
                                 </form>
-                                <form method="post" action="{% url 'update_application_status' app.id %}" style="margin: 0;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="status" value="rejected">
-                                    <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 8px 16px;">Reject</button>
-                                </form>
+                                <button type="button" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 8px 16px; height: max-content;" onclick="document.getElementById('decline-form-{{ app.id }}').style.display = 'flex'; document.getElementById('action-buttons-{{ app.id }}').style.display = 'none';">Decline</button>
+                            </div>
+                            
+                            <form id="decline-form-{{ app.id }}" method="post" action="{% url 'update_application_status' app.id %}" style="display: none; flex-direction: column; gap: 8px; background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2); margin: 0 0 16px 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="status" value="rejected">
+                                <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem; font-weight: 600;">Decline Application & Add Feedback</span>
+                                <textarea name="feedback" class="dk-search-input" placeholder="Type optional feedback for the candidate..." style="width: 250px; border-radius: 8px; min-height: 80px; font-size: 0.85rem; padding: 12px; resize: vertical; border-color: rgba(255,255,255,0.1);"></textarea>
+                                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                    <button type="button" class="dk-btn-ghost" style="padding: 8px 16px; flex: 1; background: rgba(255,255,255,0.05);" onclick="document.getElementById('decline-form-{{ app.id }}').style.display = 'none'; document.getElementById('action-buttons-{{ app.id }}').style.display = 'flex';">Cancel</button>
+                                    <button type="submit" class="dk-btn-ghost dk-btn-ghost--red" style="padding: 8px 16px; flex: 1;">Confirm Decline</button>
+                                </div>
+                            </form>
                             </div>
                         {% else %}
                             <span class="dk-badge dk-badge--{{ app.status }}">
