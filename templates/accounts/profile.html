@@ -35,12 +35,12 @@
 
     <!-- Edit Profile Form -->
     <div style="display: flex; justify-content: center; width: 100%;">
-        <div class="dk-card" style="width: 100%; max-width: 800px; padding: 40px;">
-            <form id="profile-form" class="profile-readonly" method="post" action="{% url 'profile' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="dk-card" style="width: 100%; max-width: 800px; padding: 24px 32px;">
+            <form id="profile-form" class="profile-readonly" method="post" action="{% url 'profile' %}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 10px;">
                 {% csrf_token %}
 
                 <!-- Avatar Section -->
-                <div style="display: flex; align-items: center; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
                     <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fff; overflow: hidden; position: relative;">
                         <!-- Check which photo to display based on role -->
                         {% if profile.role == 'seeker' and profile.profile_photo %}
@@ -72,28 +72,28 @@
                     </div>
                 </div>
 
-                <div class="section-header--dark text-left" style="margin-top: 16px;">
+                <div class="section-header--dark text-left" style="margin-top: 12px;">
                     <h3 style="color: #fff; font-size: 1.2rem;">Account Configuration</h3>
                 </div>
 
                 <!-- Core Details (Shared) -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">First Name</label>
                         <input type="text" name="first_name" class="dk-search-input" value="{{ profile.user.first_name }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Last Name</label>
                         <input type="text" name="last_name" class="dk-search-input" value="{{ profile.user.last_name }}" style="width: 100%; border-radius: 10px;">
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Email Address</label>
                         <input type="email" name="email" class="dk-search-input" value="{{ profile.user.email }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Phone Number</label>
                         <input type="text" name="phone_number" class="dk-search-input" value="{{ profile.phone_number }}" style="width: 100%; border-radius: 10px;">
                     </div>
@@ -101,38 +101,38 @@
 
                 {% if profile.role == 'seeker' %}
                 <!-- SEEKER SPECIFIC -->
-                <div class="section-header--dark text-left" style="margin-top: 16px;">
+                <div class="section-header--dark text-left" style="margin-top: 12px;">
                     <h3 style="color: #fff; font-size: 1.2rem;">Professional Details</h3>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Current Job Title</label>
                         <input type="text" name="current_job_title" class="dk-search-input" value="{{ profile.current_job_title }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Years of Experience</label>
                         <input type="number" name="years_of_experience" class="dk-search-input" value="{{ profile.years_of_experience|default:'' }}" style="width: 100%; border-radius: 10px;">
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Primary Skills</label>
                     <input type="text" name="primary_skills" class="dk-search-input" value="{{ profile.primary_skills }}" style="width: 100%; border-radius: 10px;">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Industry</label>
                         <input type="text" name="seeker_industry" class="dk-search-input" value="{{ profile.seeker_industry }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Highest Education</label>
                         <input type="text" name="education" class="dk-search-input" value="{{ profile.education }}" style="width: 100%; border-radius: 10px;">
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Resume / CV</label>
                     {% if profile.resume %}
                         <div style="margin-bottom: 8px;">
@@ -143,12 +143,12 @@
                     <small class="edit-only" style="color: rgba(255,255,255,0.4);">Uploading a new file will replace your current resume.</small>
                 </div>
 
-                <div class="section-header--dark text-left" style="margin-top: 16px;">
+                <div class="section-header--dark text-left" style="margin-top: 12px;">
                     <h3 style="color: #fff; font-size: 1.2rem;">Job Preferences</h3>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Job Type</label>
                         <select name="job_type" class="dk-select" id="job_type_select" style="width: 100%;">
                             <option value="">---</option>
@@ -158,7 +158,7 @@
                             <option value="Internship">Internship</option>
                         </select>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Work Mode</label>
                         <select name="work_mode" class="dk-select" id="work_mode_select" style="width: 100%;">
                             <option value="">---</option>
@@ -169,12 +169,12 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Expected Salary</label>
                         <input type="text" name="expected_salary" class="dk-search-input" value="{{ profile.expected_salary }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Notice Period</label>
                         <input type="text" name="notice_period" class="dk-search-input" value="{{ profile.notice_period }}" style="width: 100%; border-radius: 10px;">
                     </div>
@@ -182,21 +182,21 @@
 
                 {% elif profile.role == 'provider' %}
                 <!-- PROVIDER SPECIFIC -->
-                <div class="section-header--dark text-left" style="margin-top: 16px;">
+                <div class="section-header--dark text-left" style="margin-top: 12px;">
                     <h3 style="color: #fff; font-size: 1.2rem;">Company Details</h3>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Name</label>
                     <input type="text" name="company_name" class="dk-search-input" value="{{ profile.company_name }}" style="width: 100%; border-radius: 10px;">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Industry / Sector</label>
                         <input type="text" name="company_industry" class="dk-search-input" value="{{ profile.company_industry }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Size</label>
                         <select name="company_size" class="dk-select" id="company_size_select" style="width: 100%;">
                             <option value="">---</option>
@@ -208,31 +208,31 @@
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">HQ Location</label>
                     <input type="text" name="company_location" class="dk-search-input" value="{{ profile.company_location }}" style="width: 100%; border-radius: 10px;">
                 </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Website URL</label>
                     <input type="url" name="company_website" class="dk-search-input" value="{{ profile.company_website }}" style="width: 100%; border-radius: 10px;">
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Company Description</label>
                     <textarea name="company_description" class="dk-search-input" style="width: 100%; border-radius: 10px; min-height: 100px;">{{ profile.company_description }}</textarea>
                 </div>
 
-                <div class="section-header--dark text-left" style="margin-top: 16px;">
+                <div class="section-header--dark text-left" style="margin-top: 12px;">
                     <h3 style="color: #fff; font-size: 1.2rem;">Recruiter Details</h3>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">Your Designation</label>
                         <input type="text" name="recruiter_designation" class="dk-search-input" value="{{ profile.recruiter_designation }}" style="width: 100%; border-radius: 10px;">
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
                         <label style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; font-weight: 600;">LinkedIn Profile</label>
                         <input type="url" name="linkedin_profile" class="dk-search-input" value="{{ profile.linkedin_profile }}" style="width: 100%; border-radius: 10px;">
                     </div>
@@ -243,7 +243,7 @@
                 <div style="margin-top: 24px; text-align: right; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
                     <button type="button" id="edit-btn" class="view-only dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Edit Profile</button>
                     
-                    <div class="edit-only" style="display: flex; gap: 16px; justify-content: flex-end;">
+                    <div class="edit-only" style="display: flex; gap: 10px; justify-content: flex-end;">
                         <button type="button" id="cancel-btn" class="dk-btn-ghost" style="padding: 14px 32px; font-size: 1.05rem; color: #fff; background: rgba(255,255,255,0.05);">Cancel</button>
                         <button type="submit" class="dk-btn-sm" style="padding: 14px 32px; font-size: 1.05rem;">Save Changes</button>
                     </div>
